@@ -61,25 +61,54 @@
             )))
 (om/root paneluser-view  app-state {:target (.getElementById js/document "user-pn")})
 
+
+; om.core/build-all para cada fila de teams
+(defn teamrow-view [team owner]
+  (reify
+    om/IRenderState
+    (render-state [this {:keys [delete ]}]
+                  (dom/tr nil
+                          (dom/td nil (:name team))
+                          (dom/td nil (:balance team))
+                          (dom/td nil (:score team))
+                          (dom/td nil
+                                  (dom/button #js {:onClick (fn [e] (put! delete team))} "delete")
+                                  (dom/button nil "select"))
+                          )
+
+                  )
+    )
+  )
+
 ; todo meter en el primero las cabeceras y evaluar first rest
 (defn panelteams-view [app owner]
   (reify
-    om/IRender
-    (render [this]
+    om/IInitState
+    (init-state [_]
+                {:delete (chan) })
+    om/IWillMount
+    (will-mount [_]
+                (let [delete (om/get-state owner :delete)]
+                  (go (loop []
+                        (let [team (<! delete)]
+                          (om/transact! app :teams
+                                        (fn [xs] (vec (remove #(= team %) xs))))
+                          (recur)))))
+
+                )
+    om/IRenderState
+    (render-state [this {:keys [delete show]}]
             (dom/div nil
                      (if (> (count (:teams app)) 0)
                        (dom/table
                         #js {:className "table table-bordered table-hover table-striped"}
                         (apply dom/thead nil
-                               (for [h (keys (first (:teams app)))
+                               (for [h '("nom" "€" "pts")
                                      :let [hs (str h)]]
                                  (dom/th nil hs)))
                         (apply dom/tbody nil
-                               (for [t (:teams app)]
-                                 (apply dom/tr nil
-                                        (for [tv (vals t)]
-                                          (dom/td nil tv)))))
-                        )))
+                               (om/build-all teamrow-view (:teams app)
+                                             {:init-state {:delete delete}} )))))
             ))
   )
 (om/root panelteams-view app-state {:target (.getElementById js/document "teams-pn")})
@@ -89,7 +118,7 @@
 ;(swap! app-state assoc :text "hola")
 ;(swap! app-state assoc :user {:name "yomismo"})
 
-;(swap! app-state update-in [:teams] concat (list {:name "as" :balance 22 :score 2}))
+(swap! app-state update-in [:teams] concat (list {:name "as" :balance 22 :score 2}))
 ;(swap! app-state update-in [:teams] concat (list {:name "dedw3" :balance 223 :score 442}))
 ;(keys (first (:teams @app-state)))
 ;@app-state
