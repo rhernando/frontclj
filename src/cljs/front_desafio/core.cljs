@@ -14,9 +14,9 @@
 
 (def app-state (atom
                 {
-                 :text "Hello world!"
-                 :user nil
-                 :team nil
+                 :text "Inicio"
+                 :user {:name nil :avatar nil}
+                 :teams '()
                  :league nil
                  }))
 
@@ -46,9 +46,50 @@
                                        (b/menu-item {:divider? true})
                                        (b/menu-item {:key 4} "Salir")))
                           (dom/div
-                      #js {:className "navbar-ex1-collapse collapse navbar-collapse"}
-                      (n/nav {:class "side-nav" :navbar? true}
-                             (n/nav-item {:key 1 :href "#"} "Menu 1")))))
+                           #js {:className "navbar-ex1-collapse collapse navbar-collapse"}
+                           (n/nav {:class "side-nav" :navbar? true}
+                                  (n/nav-item {:key 1 :href "#"} "Menu 1")))))
             )))
 
 (om/root navigation-view app-state {:target (.getElementById js/document "navigator")})
+
+(defn paneluser-view [app owner]
+  (reify
+    om/IRender
+    (render [this]
+            (dom/div nil (dom/p nil (dom/span nil (get-in app [:user :name] ))))
+            )))
+(om/root paneluser-view  app-state {:target (.getElementById js/document "user-pn")})
+
+; todo meter en el primero las cabeceras y evaluar first rest
+(defn panelteams-view [app owner]
+  (reify
+    om/IRender
+    (render [this]
+            (dom/div nil
+                     (if (> (count (:teams app)) 0)
+                       (dom/table
+                        #js {:className "table table-bordered table-hover table-striped"}
+                        (apply dom/thead nil
+                               (for [h (keys (first (:teams app)))
+                                     :let [hs (str h)]]
+                                 (dom/th nil hs)))
+                        (apply dom/tbody nil
+                               (for [t (:teams app)]
+                                 (apply dom/tr nil
+                                        (for [tv (vals t)]
+                                          (dom/td nil tv)))))
+                        )))
+            ))
+  )
+(om/root panelteams-view app-state {:target (.getElementById js/document "teams-pn")})
+
+
+;; PRUEBAS estaticas
+;(swap! app-state assoc :text "hola")
+;(swap! app-state assoc :user {:name "yomismo"})
+
+;(swap! app-state update-in [:teams] concat (list {:name "as" :balance 22 :score 2}))
+;(swap! app-state update-in [:teams] concat (list {:name "dedw3" :balance 223 :score 442}))
+;(keys (first (:teams @app-state)))
+;@app-state
