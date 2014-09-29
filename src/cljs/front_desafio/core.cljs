@@ -7,10 +7,70 @@
             [cljs-http.client :as http]
             [om-bootstrap.nav :as n]
             [om-bootstrap.button :as b]
+            [taoensso.sente :as s]
             [front-desafio.utils :refer [guid]]))
 
 ;; Lets you do (prn "stuff") to the console
 (enable-console-print!)
+
+;; create the Sente web socket connection stuff when we are loaded:
+
+(let [{:keys [chsk ch-recv send-fn]}
+      (s/make-channel-socket! "/ws" {} {:type :auto})]
+  (def chsk       chsk)
+  (def ch-chsk    ch-recv)
+  (def chsk-send! send-fn))
+
+(defmulti handle-event
+  "Handle events based on the event ID."
+  (fn [[ev-id ev-arg] app owner] ev-id))
+
+;; Process the server's reply by updating the application state:
+
+(defmethod handle-event :test/reply
+  [[_ msg] app owner]
+  (om/update! app :data/text msg))
+
+;; Ignore unknown events (we just print to the console):
+
+(defmethod handle-event :default
+  [event app owner]
+  #_(println "UNKNOWN EVENT" event))
+
+;; Remember the session state in the application component's local state:
+
+(defmethod handle-event :session/state
+  [[_ state] app owner]
+  (om/set-state! owner :session/state state))
+
+;; Handle authentication failure (we just set an error message for display):
+
+(defmethod handle-event :auth/fail
+  [_ app owner]
+  (om/update! app [:notify/error] "Invalid credentials"))
+
+;; Handle authentication success (clear the error message; update application session state):
+
+(defmethod handle-event :auth/success
+  [_ app owner]
+  (om/set-state! owner :session/state :secure))
+
+(defn test-session
+  "Ping the server to update the sesssion state."
+  [owner]
+  (chsk-send! [:session/status]))
+
+(defn event-loop
+  "Handle inbound events."
+  [app owner]
+  (go (loop [[op arg] (<! ch-chsk)]
+        #_(println "-" op)
+        (case op
+          :chsk/recv (handle-event arg app owner)
+          ;; we ignore other Sente events
+          (test-session owner))
+        (recur (<! ch-chsk)))))
+
 
 (def app-state (atom
                 {
@@ -31,6 +91,12 @@
 
 (defn navigation-view [app owner]
   (reify
+    om/IInitState
+    (init-state [this]
+                {:session/state :unknown})
+    om/IWillMount
+    (will-mount [this]
+                (event-loop app owner))
     om/IRender
     (render [this]
             (dom/div nil (n/navbar

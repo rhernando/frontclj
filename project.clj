@@ -4,10 +4,13 @@
 
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/tools.reader "0.8.2"]
+                 [org.clojure/core.cache "0.6.3"]
                  ;; CLJ
                  [ring/ring-core "1.2.0"]
                  [compojure "1.1.6"]
                  [cheshire "5.2.0"]
+                 [com.taoensso/sente "0.9.0"]
+                 [http-kit "2.1.18"]
                  ;; CLJS
                  [org.clojure/clojurescript "0.0-2322"]
                  [org.clojure/core.async "0.1.278.0-76b25b-alpha"]
@@ -17,14 +20,17 @@
                  [racehub/om-bootstrap "0.2.8"]]
 
   :plugins [[lein-cljsbuild "1.0.3"]
-            [lein-ring "0.8.7"]
+            ;[lein-ring "0.8.7"]
             [lein-pdo "0.1.1"]]
 
-  :aliases {"dev" ["pdo" "cljsbuild" "auto" "dev," "ring" "server-headless"]}
+  :aliases {"dev" ["pdo" "cljsbuild" "auto" "dev," "run"]}
 
+  ; lein cljsbuild once dev
+  ; PORT=3001 lein run -m front_desafio.core
   :ring {:handler front-desafio.core/app
          :init    front-desafio.core/init
          :port    3001}
+  :main front-desafio.core
 
   :source-paths ["src/clj"]
 
