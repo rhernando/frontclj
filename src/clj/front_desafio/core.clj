@@ -1,7 +1,7 @@
 (ns front-desafio.core
   (:require [compojure.handler :as handler]
             [compojure.route :as route]
-            [compojure.core :refer [GET POST defroutes]]
+            [compojure.core :refer [GET POST defroutes routes]]
             [clojure.core.async :as async :refer [<! <!! chan go thread]]
             [clojure.core.cache :as cache]
             ;[ring.util.response :as resp]
@@ -25,7 +25,7 @@
 ;; entirely on socket communication instead of needing to login
 ;; to the application first: 20 minutes of inactive will log you out
 
-(def session-map (atom (cache/ttl-cache-factory {} :ttl (* 20 60 1000))))
+(def session-map (atom (cache/ttl-cache-factory {} :ttl (* 5 60 1000))))
 
 (defn keep-alive
   "Given a UID, keep it alive."
@@ -47,6 +47,12 @@
     (println "get-token" uid token (java.util.Date.))
     token))
 
+
+(defn root
+  "Return the absolute (root-relative) version of the given path."
+  [path]
+  (str (System/getProperty "user.dir") path))
+
 (defn unique-id
   "Return a really unique ID (for an unsecured session ID).
   No, a random number is not unique enough. Use a UUID for real!"
@@ -59,37 +65,26 @@
   [req]
   (get-in req [:session :uid]))
 
-(defn json-response [data & [status]]
-  {:status (or status 200)
-   :headers {"Content-Type" "application/json"}
-   :body (json/generate-string data)})
+(defn index
+  "Handle index page request. Injects session uid if needed."
+  [req]
+  {:status 200
+   :session (if (session-uid req)
+              (:session req)
+              (assoc (:session req) :uid (unique-id)))
+   :body (slurp "resources/public/index.html")})
 
-(defn index []
-  (file-response "public/index.html" {:root "resources"}))
+
 
 (defroutes app-routes
-  (GET "/" [] (index))
-
-  (GET  "/ws" req (#'ring-ajax-get-ws req))
-  (POST "/ws" req (#'ring-ajax-post   req))
-
-  (GET "/test" [] (json-response
-                   {:message "You made it!"}))
-
-  (POST "/test" req (json-response
-                     {:message "Doing something something important..."}))
-
-  (route/resources "/")
-  (route/not-found "Page not found"))
-
-;(def app
-;  (-> #'app-routes
-;      (handler/api)))
-
-(defn session-uid
-  "Convenient to extract the UID that Sente needs from the request."
-  [req]
-  (get-in req [:session :uid]))
+  (-> (routes
+       (GET  "/"   req (#'index req))
+       (GET  "/ws" req (#'ring-ajax-get-ws req))
+       (POST "/ws" req (#'ring-ajax-post   req))
+       (route/resources "/")
+       (route/files "/" {:root (root "")})
+       (route/not-found "<p>Page not found. I has a sad!</p>"))
+      handler/site))
 
 (defmulti handle-event
   "Handle events based on the event ID."
@@ -122,9 +117,6 @@
 ;; Reply with the same message, followed by the reverse of the message a few seconds later.
 ;; Also record activity to keep session alive.
 
-
-;; Reply with the same message, followed by the reverse of the message a few seconds later.
-;; Also record activity to keep session alive.
 
 (defmethod handle-event :test/echo
   [[_ msg] req]
@@ -167,3 +159,7 @@
   (let [port (or (System/getenv "PORT") 3001)]
     (println "Starting Sente server on port" port "...")
     (kit/run-server #'app-routes {:port port})))
+
+
+
+
