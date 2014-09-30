@@ -57,6 +57,11 @@
   [_ app owner]
   (om/set-state! owner :session/state :secure))
 
+(defmethod handle-event :user/data
+  [event app owner]
+  (println event)
+  (om/set-state! owner :session/state :secure))
+
 (defn test-session
   "Ping the server to update the sesssion state."
   [owner]
@@ -73,15 +78,6 @@
           (test-session owner))
         (recur (<! ch-chsk)))))
 
-
-; estructura de la aplicacion
-(def app-state (atom
-                {
-                 :text "Inicio"
-                 :user {:name nil :avatar nil}
-                 :teams '()
-                 :league nil
-                 }))
 
 (defn front-desafio-app [app owner]
   (reify
@@ -117,7 +113,7 @@
                                   (n/nav-item {:key 1 :href "#"} "Menu 1")))))
             )))
 
-(om/root navigation-view app-state {:target (.getElementById js/document "navigator")})
+;(om/root navigation-view app-state {:target (.getElementById js/document "navigator")})
 
 (defn paneluser-view [app owner]
   (reify
@@ -205,7 +201,9 @@
   (let [username (-> (om/get-node owner "username") .-value)
         password (-> (om/get-node owner "password") .-value)]
     (om/update! app [:notify/error] nil)
-    (chsk-send! [:session/auth [username password]]))
+    (chsk-send! [:session/auth [username password]])
+    ;(sente/chsk-reconnect! chsk)
+    )
   ;; suppress the form submit:
   false)
 
@@ -262,9 +260,15 @@
                              :unknown
                              (dom/div nil "Loading..."))))))
 
-(def app-state
-  "Our very minimal application state - a piece of text that we display."
-  (atom {:data/text "Enter a string and press RETURN!"}))
+
+; estructura de la aplicacion
+(def app-state (atom
+                {
+                 :text "Inicio"
+                 :user {:name nil :avatar nil}
+                 :teams '()
+                 :league nil
+                 }))
 
 (om/root application
          app-state

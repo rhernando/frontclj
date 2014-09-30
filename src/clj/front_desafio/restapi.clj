@@ -28,7 +28,7 @@
     (if error
       (println "Failed, exception is " error)
       (println "Async HTTP POST: " status))
-    )
-  (:token (json/read-str body :key-fn keyword)))
+
+  (json/read-str body :key-fn keyword)))
 
 

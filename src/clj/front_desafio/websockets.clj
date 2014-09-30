@@ -63,11 +63,6 @@
   (session-status req))
 
 
-(defn unique-id
-  "Return a really unique ID (for an unsecured session ID).
-  No, a random number is not unique enough. Use a UUID for real!"
-  []
-  (rand-int 10000))
 
 ;; Reply with authentication failure or success.
 ;; For a successful authentication, remember the login.
@@ -77,12 +72,17 @@
   (when-let [uid (session-uid req)]
 
     (let [token (api/signin username password)
-          valid (and (= "admin" username)
-                     (= "secret" password))]
+          valid (:user_id token)]
+      (println token)
       ; DUDA : meter token o ID usuario
-      (when valid
-        (add-token uid (unique-id)))
-      (chsk-send! uid [(if valid :auth/success :auth/fail)]))))
+      (if valid
+        (do
+          (add-token uid (:token token))
+          ;(assoc (:session req) :uid (:user_id token))
+          (chsk-send! uid [ :auth/success ])
+          (chsk-send! uid [ :user/data (select-keys token [:username :avatar]) ])
+          )
+        (chsk-send! uid [:auth/fail])))))
 
 ;; Reply with the same message, followed by the reverse of the message a few seconds later.
 ;; Also record activity to keep session alive.

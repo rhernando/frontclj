@@ -20,8 +20,10 @@
                  [racehub/om-bootstrap "0.2.8"]]
 
   :plugins [[lein-cljsbuild "1.0.3"]
+            [lein-autoreload "0.1.0"]
             ;[lein-ring "0.8.7"]
             [lein-pdo "0.1.1"]]
+  :reloading (front-desafio.core)
 
   :aliases {"dev" ["pdo" "cljsbuild" "auto" "dev," "run"]}
 

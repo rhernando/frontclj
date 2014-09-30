@@ -19,10 +19,12 @@
 (defn index
   "Handle index page request. Injects session uid if needed."
   [req]
+  (println (get-in req [:cookies "ring-session" :value]))
   {:status 200
    :session (if (session-uid req)
               (:session req)
-              (assoc (:session req) :uid (unique-id)))
+              (assoc (:session req) :uid (get-in req [:cookies "ring-session" :value]))
+              )
    :body (slurp "resources/public/index.html")})
 
 
