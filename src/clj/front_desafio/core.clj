@@ -15,6 +15,11 @@
   [path]
   (str (System/getProperty "user.dir") path))
 
+(defn unique-id
+  "Return a really unique ID (for an unsecured session ID).
+  No, a random number is not unique enough. Use a UUID for real!"
+  []
+  (rand-int 10000))
 
 (defn index
   "Handle index page request. Injects session uid if needed."
@@ -23,7 +28,9 @@
   {:status 200
    :session (if (session-uid req)
               (:session req)
-              (assoc (:session req) :uid (get-in req [:cookies "ring-session" :value]))
+              (if (get-in req [:cookies "ring-session" :value])
+                (assoc (:session req) :uid (get-in req [:cookies "ring-session" :value]))
+                (assoc (:session req) :uid nil))
               )
    :body (slurp "resources/public/index.html")})
 

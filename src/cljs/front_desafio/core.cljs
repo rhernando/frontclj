@@ -17,11 +17,12 @@
 
 ;; create the Sente web socket connection stuff when we are loaded:
 
-(let [{:keys [chsk ch-recv send-fn]}
-      (s/make-channel-socket! "/ws" {} {:type :auto})]
+(let [{:keys [chsk ch-recv send-fn state ]}
+      (s/make-channel-socket! "/ws" {:type :auto})]
   (def chsk       chsk)
   (def ch-chsk    ch-recv)
-  (def chsk-send! send-fn))
+  (def chsk-send! send-fn)
+  (def chsk-state state)  )
 
 (defmulti handle-event
   "Handle events based on the event ID."
@@ -54,7 +55,18 @@
 ;; Handle authentication success (clear the error message; update application session state):
 
 (defmethod handle-event :auth/success
-  [_ app owner]
+  [event app owner]
+  (println event)
+
+  (let [
+      {:keys [chsk ch-recv send-fn state]}
+      (s/make-channel-socket! "/ws" ; Note the same URL as before
+        {:type   :auto})]
+  (def chsk       chsk)
+  (def ch-chsk    ch-recv) ; ChannelSocket's receive channel
+  (def chsk-send! send-fn) ; ChannelSocket's send API fn
+  (def chsk-state state)   ; Watchable, read-only atom
+  )
   (om/set-state! owner :session/state :secure))
 
 (defmethod handle-event :user/data
@@ -245,7 +257,7 @@
   (reify
     om/IInitState
     (init-state [this]
-                {:session/state :unknown})
+                {:session/state :open})
     om/IWillMount
     (will-mount [this]
                 (event-loop app owner))

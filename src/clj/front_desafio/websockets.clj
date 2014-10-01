@@ -8,12 +8,13 @@
 ;; create the Sente web socket connection stuff when we are loaded:
 
 (let [{:keys [ch-recv send-fn ajax-post-fn
-              ajax-get-or-ws-handshake-fn] :as sente-info}
+              ajax-get-or-ws-handshake-fn connected-uids] :as sente-info}
       (s/make-channel-socket! {})]
   (def ring-ajax-post   ajax-post-fn)
   (def ring-ajax-get-ws ajax-get-or-ws-handshake-fn)
   (def ch-chsk          ch-recv)
-  (def chsk-send!       send-fn))
+  (def chsk-send!       send-fn)
+  (def connected-uids                connected-uids) )
 
 ;; session cache to maintain authentication - so we can rely
 ;; entirely on socket communication instead of needing to login
