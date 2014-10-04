@@ -21,9 +21,23 @@
   []
   (rand-int 10000))
 
+(defn login!
+  "Here's where you'll add your server-side login/auth procedure (Friend, etc.).
+  In our simplified example we'll just always successfully authenticate the user
+  with whatever user-id they provided in the auth request."
+  [ring-request]
+   (println "login " ring-request)
+   (println (get-in ring-request [:cookies "ring-session" :value]))
+
+  (let [{:keys [session params]} ring-request
+        {:keys [user-id]} params]
+    (println "Login request: %s" params)
+    {:status 200 :session (assoc session :uid user-id)}))
+
 (defn index
   "Handle index page request. Injects session uid if needed."
   [req]
+  (println "ind")
   (println (get-in req [:cookies "ring-session" :value]))
   {:status 200
    :session (if (session-uid req)
@@ -41,6 +55,7 @@
        (GET  "/"   req (#'index req))
        (GET  "/ws" req (#'ring-ajax-get-ws req))
        (POST "/ws" req (#'ring-ajax-post   req))
+       (POST "/login" req (#'login!   req))
        (route/resources "/")
        (route/files "/" {:root (root "")})
        (route/not-found "<p>Page not found. I has a sad!</p>"))

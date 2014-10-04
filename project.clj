@@ -7,6 +7,7 @@
                  [org.clojure/core.cache "0.6.3"]
                  ;; CLJ
                  [ring/ring-core "1.2.0"]
+                 [ring/ring-json "0.3.1"]
                  [compojure "1.1.6"]
                  [cheshire "5.2.0"]
                  [com.taoensso/sente "0.13.0"]
@@ -15,6 +16,7 @@
                  [org.clojure/clojurescript "0.0-2322"]
                  [org.clojure/core.async "0.1.278.0-76b25b-alpha"]
                  [cljs-http "0.1.9"]
+                 [cljs-ajax "0.3.2"]
                  [secretary "1.1.0"]
                  [om "0.7.3"]
                  [racehub/om-bootstrap "0.2.8"]]

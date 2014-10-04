@@ -9,7 +9,9 @@
             [om-bootstrap.nav :as n]
             [om-bootstrap.button :as b]
             [om-bootstrap.input :as i]
+            [ajax.core :refer [GET POST]]
             [taoensso.sente :as s]
+            [taoensso.encore :as encore :refer (logf)]
             [front-desafio.utils :refer [guid]]))
 
 ;; Lets you do (prn "stuff") to the console
@@ -67,12 +69,14 @@
   (def chsk-send! send-fn) ; ChannelSocket's send API fn
   (def chsk-state state)   ; Watchable, read-only atom
   )
-  (om/set-state! owner :session/state :secure))
+  ;(om/set-state! owner :session/state :secure)
+  )
 
 (defmethod handle-event :user/data
   [event app owner]
   (println event)
-  (om/set-state! owner :session/state :secure))
+  ;(om/set-state! owner :session/state :secure)
+  )
 
 (defn test-session
   "Ping the server to update the sesssion state."
@@ -206,15 +210,28 @@
                    (om/build panelteams-view app {})
                    ))))
 
+(defn login-handler [response]
+  (.log js/console (str response)))
+
+(defn login-error-handler [{:keys [status status-text]}]
+  (.log js/console (str "something bad happened: " status " " status-text)))
 
 (defn attempt-login
   "Handle the login event - send credentials to the server."
   [e app owner]
   (let [username (-> (om/get-node owner "username") .-value)
         password (-> (om/get-node owner "password") .-value)]
-    (om/update! app [:notify/error] nil)
-    (chsk-send! [:session/auth [username password]])
+    ;(om/update! app [:notify/error] nil)
+    ;(chsk-send! [:session/auth [username password]])
     ;(sente/chsk-reconnect! chsk)
+    (POST "/login"
+        {:params {:username username
+                  :password   password}
+         :handler login-handler
+         :error-handler login-error-handler
+         :response-format :json
+         :format :raw
+         :keywords? true})
     )
   ;; suppress the form submit:
   false)
