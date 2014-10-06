@@ -54,8 +54,11 @@
 (defn session-status
   "Tell the server what state this user's session is in."
   [req]
-  (when-let [uid (session-uid req)]
-    (chsk-send! uid [:session/state (if (get-token uid) :secure :open)])))
+  ;(when-let [uid (session-uid req)]
+    (chsk-send! (session-uid req) [:session/state (if (get-token (session-uid req)) :secure :open)])
+  ;  )
+    (chsk-send! (session-uid req) [:pepe/juan {:como "mola"}])
+  )
 
 ;; Reply with the session state - either open or secure.
 
@@ -99,7 +102,7 @@
 
 ;; When the client pings us, send back the session state:
 
-(defmethod handle-event :chsk/ping
+(defmethod handle-event :chsk/ws-ping
   [_ req]
   (session-status req))
 

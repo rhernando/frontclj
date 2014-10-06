@@ -26,73 +26,45 @@
   (def chsk-send! send-fn)
   (def chsk-state state)  )
 
-(defmulti handle-event
-  "Handle events based on the event ID."
-  (fn [[ev-id ev-arg] app owner] ev-id))
+(defmulti event-msg-handler :id) ; Dispatch on event-id
 
-;; Process the server's reply by updating the application state:
+;; Wrap for logging, catching, etc.:
+(defn     event-msg-handler* [{:as ev-msg :keys [id ?data event]}]
+  (event-msg-handler ev-msg)
+  )
 
-(defmethod handle-event :test/reply
-  [[_ msg] app owner]
-  (om/update! app :data/text msg))
+(do ; Client-side methods
+  (defmethod event-msg-handler :default ; Fallback
+    [{:as ev-msg :keys [event]}]
+    (logf "Unhandled event: %s" event))
 
-;; Ignore unknown events (we just print to the console):
+  (defmethod event-msg-handler :chsk/state
+    [{:as ev-msg :keys [?data]}]
+    (if (= ?data {:first-open? true})
+      (logf "Channel socket successfully established!")
+      (logf "Channel socket state change: %s" ?data)))
 
-(defmethod handle-event :default
-  [event app owner]
-  #_(println "UNKNOWN EVENT" event))
+  (defmethod event-msg-handler :chsk/recv
+    [{:as ev-msg :keys [?data]}]
+    (logf "Push event from server: %s" ?data)
+    (case  (first ?data)
+           :session/state (swap! app-state assoc :session/state :open)
+           (println "def event"))
+  )
+  ;; Add your (defmethod handle-event-msg! <event-id> [ev-msg] <body>)s here...
+  )
+
 
 ;; Remember the session state in the application component's local state:
+;(defmethod handle-event :session/state
+;  [[_ state] app owner]
+;  (om/set-state! owner :session/state state))
 
-(defmethod handle-event :session/state
-  [[_ state] app owner]
-  (om/set-state! owner :session/state state))
 
-;; Handle authentication failure (we just set an error message for display):
-
-(defmethod handle-event :auth/fail
-  [_ app owner]
-  (om/update! app [:notify/error] "Invalid credentials"))
-
-;; Handle authentication success (clear the error message; update application session state):
-
-(defmethod handle-event :auth/success
-  [event app owner]
-  (println event)
-
-  (let [
-        {:keys [chsk ch-recv send-fn state]}
-        (s/make-channel-socket! "/ws" ; Note the same URL as before
-                                {:type   :auto})]
-    (def chsk       chsk)
-    (def ch-chsk    ch-recv) ; ChannelSocket's receive channel
-    (def chsk-send! send-fn) ; ChannelSocket's send API fn
-    (def chsk-state state)   ; Watchable, read-only atom
-    )
-  ;(om/set-state! owner :session/state :secure)
-  )
-
-(defmethod handle-event :user/data
-  [event app owner]
-  (println event)
-  ;(om/set-state! owner :session/state :secure)
-  )
-
-(defn test-session
-  "Ping the server to update the sesssion state."
-  [owner]
-  (chsk-send! [:session/status]))
-
-(defn event-loop
-  "Handle inbound events."
-  [app owner]
-  (go (loop [[op arg] (<! ch-chsk)]
-        #_(println "-" op)
-        (case op
-          :chsk/recv (handle-event arg app owner)
-          ;; we ignore other Sente events
-          (test-session owner))
-        (recur (<! ch-chsk)))))
+;(defn test-session
+;  "Ping the server to update the sesssion state."
+;  [owner]
+;  (chsk-send! [:session/status]))
 
 
 (defn front-desafio-app [app owner]
@@ -190,7 +162,6 @@
                                                    {:init-state {:delete delete}} )))))
                   ))
   )
-;(om/root panelteams-view app-state {:target (.getElementById js/document "teams-pn")})
 
 (defn field-change
   "Generic input field updater. Keeps state in sync with input."
@@ -274,27 +245,31 @@
                                    (b/button {:type "submit"} "Login") ) ))))
 
 
+
 (defn application
   "Component that represents our application. Maintains session state.
   Selects views based on session state."
   [app owner]
   (reify
-    om/IInitState
-    (init-state [this]
-                {:session/state :open})
+    ;om/IInitState
+    ;(init-state [this]
+                ;{:session/state :open}
+    ;            )
     om/IWillMount
     (will-mount [this]
-                (event-loop app owner))
+                (s/start-chsk-router! ch-chsk event-msg-handler*)
+                )
     om/IRenderState
     (render-state [this state]
                   (dom/div #js {:style #js {:width "100%"}}
-                           (case (:session/state state)
+                           (let [state (:session/state app)]
+                           (case state
                              :secure
                              (om/build secured-application app {})
                              :open
                              (om/build login-form app {})
                              :unknown
-                             (dom/div nil "Loading..."))))))
+                             (dom/div nil "Loading...")))))))
 
 
 ; estructura de la aplicacion
@@ -304,6 +279,7 @@
                  :user {:name nil :avatar nil}
                  :teams '()
                  :league nil
+                 :session/state :open
                  }))
 
 (om/root application

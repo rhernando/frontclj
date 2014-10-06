@@ -10,7 +10,7 @@
                  [ring/ring-json "0.3.1"]
                  [compojure "1.1.6"]
                  [cheshire "5.2.0"]
-                 [com.taoensso/sente "0.13.0"]
+                 [com.taoensso/sente "1.2.0"]
                  [http-kit "2.1.18"]
                  ;; CLJS
                  [org.clojure/clojurescript "0.0-2322"]
