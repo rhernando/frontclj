@@ -3,6 +3,7 @@
             [compojure.route :as route]
             [compojure.core :refer [GET POST defroutes routes]]
             [front-desafio.websockets :refer :all]
+            [front-desafio.restapi :as api]
             ;[ring.util.response :as resp]
             [org.httpkit.server :as kit]
             [cheshire.core :as json]
@@ -26,13 +27,29 @@
   In our simplified example we'll just always successfully authenticate the user
   with whatever user-id they provided in the auth request."
   [ring-request]
-   (println "login " ring-request)
-   (println (get-in ring-request [:cookies "ring-session" :value]))
+  (println "login " ring-request)
+  (println (get-in ring-request [:cookies "ring-session" :value]))
 
   (let [{:keys [session params]} ring-request
-        {:keys [user-id]} params]
+        {:keys [username password]} params]
     (println "Login request: %s" params)
-    {:status 200 :session (assoc session :uid user-id)}))
+    (let [token (api/signin username password)
+          valid (:user_id token)]
+      (println token)
+      (println valid)
+      (if valid
+        (do
+          (add-token (get-in ring-request [:cookies "ring-session" :value]) (:token token))
+          ;(assoc (:session req) :uid (:user_id token))
+          {:status 200
+           :session (assoc session :uid (get-in ring-request [:cookies "ring-session" :value]))
+           :body (json/generate-string token)}
+          )
+        {:status 500 :body (json/generate-string token)}
+        ))
+
+
+    ))
 
 (defn index
   "Handle index page request. Injects session uid if needed."

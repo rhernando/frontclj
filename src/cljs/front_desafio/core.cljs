@@ -61,14 +61,14 @@
   (println event)
 
   (let [
-      {:keys [chsk ch-recv send-fn state]}
-      (s/make-channel-socket! "/ws" ; Note the same URL as before
-        {:type   :auto})]
-  (def chsk       chsk)
-  (def ch-chsk    ch-recv) ; ChannelSocket's receive channel
-  (def chsk-send! send-fn) ; ChannelSocket's send API fn
-  (def chsk-state state)   ; Watchable, read-only atom
-  )
+        {:keys [chsk ch-recv send-fn state]}
+        (s/make-channel-socket! "/ws" ; Note the same URL as before
+                                {:type   :auto})]
+    (def chsk       chsk)
+    (def ch-chsk    ch-recv) ; ChannelSocket's receive channel
+    (def chsk-send! send-fn) ; ChannelSocket's send API fn
+    (def chsk-state state)   ; Watchable, read-only atom
+    )
   ;(om/set-state! owner :session/state :secure)
   )
 
@@ -205,33 +205,40 @@
     om/IRender
     (render [this]
             (dom/div nil
-                   (dom/h1 "Testing")
-                   (om/build paneluser-view app {})
-                   (om/build panelteams-view app {})
-                   ))))
+                     (dom/h1 "Testing")
+                     (om/build paneluser-view app {})
+                     (om/build panelteams-view app {})
+                     ))))
 
 (defn login-handler [response]
-  (.log js/console (str response)))
+  (.log js/console (str response))
+  (s/chsk-reconnect! chsk)
+  )
 
-(defn login-error-handler [{:keys [status status-text]}]
-  (.log js/console (str "something bad happened: " status " " status-text)))
+(defn login-error-handler [{:keys [message status status-text]}]
+  (.log js/console (str "something bad happened: " status " " status-text " " message))
+  (om/update! app [:notify/error] nil))
 
 (defn attempt-login
   "Handle the login event - send credentials to the server."
   [e app owner]
   (let [username (-> (om/get-node owner "username") .-value)
         password (-> (om/get-node owner "password") .-value)]
-    ;(om/update! app [:notify/error] nil)
+    (om/update! app [:notify/error] nil)
     ;(chsk-send! [:session/auth [username password]])
     ;(sente/chsk-reconnect! chsk)
     (POST "/login"
-        {:params {:username username
-                  :password   password}
-         :handler login-handler
-         :error-handler login-error-handler
-         :response-format :json
-         :format :raw
-         :keywords? true})
+          {:params {:username username
+                    :password   password}
+           :handler login-handler
+           :error-handler (fn [resp]
+                            (let [{:keys [response status status-text]} resp]
+                              (println resp)
+                              (.log js/console (str "Something bad happened: " status " " status-text " " message))
+                              (om/update! app [:notify/error] (:message response) )))
+           :response-format :json
+           :format :raw
+           :keywords? true})
     )
   ;; suppress the form submit:
   false)
