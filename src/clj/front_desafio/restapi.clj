@@ -29,6 +29,8 @@
       (println "Failed, exception is " error)
       (println "Async HTTP POST: " status))
 
-  (json/read-str body :key-fn keyword)))
+  (if body
+    (json/read-str body :key-fn keyword)
+    nil)))
 
 

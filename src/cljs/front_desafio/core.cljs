@@ -48,24 +48,11 @@
     [{:as ev-msg :keys [?data]}]
     (logf "Push event from server: %s" ?data)
     (case  (first ?data)
-           :session/state (swap! app-state assoc :session/state :open)
-           (println "def event"))
-  )
+      :session/state (swap! app-state assoc :session/state :open)
+      (println "def event"))
+    )
   ;; Add your (defmethod handle-event-msg! <event-id> [ev-msg] <body>)s here...
   )
-
-
-;; Remember the session state in the application component's local state:
-;(defmethod handle-event :session/state
-;  [[_ state] app owner]
-;  (om/set-state! owner :session/state state))
-
-
-;(defn test-session
-;  "Ping the server to update the sesssion state."
-;  [owner]
-;  (chsk-send! [:session/status]))
-
 
 (defn front-desafio-app [app owner]
   (reify
@@ -225,7 +212,7 @@
     (render-state [this state]
                   (dom/div nil
                            (when-let [error (:notify/error app)]
-                             (dom/div #js {:className "danger"} error))
+                             (dom/p #js {:className "danger"} error))
                            (dom/h1 "Login")
                            (d/form {:class "horizontal" :on-submit #(attempt-login % app owner)}
                                    (i/input {:type "text" :label "Usuario"
@@ -253,7 +240,7 @@
   (reify
     ;om/IInitState
     ;(init-state [this]
-                ;{:session/state :open}
+    ;{:session/state :open}
     ;            )
     om/IWillMount
     (will-mount [this]
@@ -263,13 +250,13 @@
     (render-state [this state]
                   (dom/div #js {:style #js {:width "100%"}}
                            (let [state (:session/state app)]
-                           (case state
-                             :secure
-                             (om/build secured-application app {})
-                             :open
-                             (om/build login-form app {})
-                             :unknown
-                             (dom/div nil "Loading...")))))))
+                             (case state
+                               :secure
+                               (om/build secured-application app {})
+                               :open
+                               (om/build login-form app {})
+                               :unknown
+                               (dom/div nil "Loading...")))))))
 
 
 ; estructura de la aplicacion
