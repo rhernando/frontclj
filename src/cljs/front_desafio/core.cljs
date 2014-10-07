@@ -9,6 +9,7 @@
             [om-bootstrap.nav :as n]
             [om-bootstrap.button :as b]
             [om-bootstrap.input :as i]
+            [om-bootstrap.random :as r]
             [ajax.core :refer [GET POST]]
             [taoensso.sente :as s]
             [taoensso.encore :as encore :refer (logf)]
@@ -201,6 +202,11 @@
   ;; suppress the form submit:
   false)
 
+(defn close-alert
+  [e app owner]
+  (om/update! app [:notify/error] nil)
+  false)
+
 (defn login-form
   "Component that provides a login form and submits credentials to the server."
   [app owner]
@@ -212,7 +218,9 @@
     (render-state [this state]
                   (dom/div nil
                            (when-let [error (:notify/error app)]
-                             (dom/p #js {:className "danger"} error))
+                             (r/alert {:bs-style "danger" }; TODO cuando se pueda.... :dismiss-after 10 :on-dismiss #(close-alert % app owner)}
+                                      (d/strong "Error!")
+                                      error))
                            (dom/h1 "Login")
                            (d/form {:class "horizontal" :on-submit #(attempt-login % app owner)}
                                    (i/input {:type "text" :label "Usuario"
@@ -229,7 +237,8 @@
                                              :on-change #(field-change % owner :password)
                                              :label-classname "col-xs-2"
                                              :wrapper-classname "col-xs-10"})
-                                   (b/button {:type "submit"} "Login") ) ))))
+                                   (b/button {:type "submit"} "Login") ) ))
+    ))
 
 
 

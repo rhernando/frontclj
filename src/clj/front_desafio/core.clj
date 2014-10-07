@@ -45,7 +45,7 @@
            :session (assoc session :uid (get-in ring-request [:cookies "ring-session" :value]))
            :body (json/generate-string token)}
           )
-        {:status 500 :body (json/generate-string {:message "Error en el servidor"})}
+        {:status 500 :body (json/generate-string token)}
         ))
 
 

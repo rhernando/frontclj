@@ -29,8 +29,10 @@
       (println "Failed, exception is " error)
       (println "Async HTTP POST: " status))
 
-  (if body
-    (json/read-str body :key-fn keyword)
-    nil)))
+    (try
+     (json/read-str body :key-fn keyword)
+     (catch Exception e {:message "Error en el servidor"} ))
+
+  ))
 
 
