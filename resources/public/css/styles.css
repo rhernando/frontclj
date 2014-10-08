@@ -3,9 +3,74 @@
   padding-top: 50px;
   padding-bottom: 25px;
 }
-/* line 4, ../../compass/_login.scss */
+/* line 5, ../../compass/_login.scss */
+.loginpage .loginbox {
+  position: relative;
+  max-width: 480px;
+  background: #16A085;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  padding-bottom: 20px;
+  margin-top: 80px;
+}
+/* line 6, ../../compass/_login.scss */
+.loginpage .loginbox h2 {
+  text-align: center;
+}
+/* line 18, ../../compass/_login.scss */
 .loginpage .form-signin {
   max-width: 330px;
   padding: 15px;
   margin: 0 auto;
 }
+
+/* line 24, ../../compass/_login.scss */
+.page-icon {
+  width: 100px;
+  height: 100px;
+  -webkit-border-radius: 100px;
+  -moz-border-radius: 100px;
+  border-radius: 100px;
+  background: #198573;
+  text-align: center;
+  margin: -60px auto 0;
+}
+/* line 33, ../../compass/_login.scss */
+.page-icon p, .page-icon h1, .page-icon img {
+  vertical-align: middle;
+  margin: 25px 0 0 0;
+  opacity: 0.6;
+  padding-top: 30px;
+}
+
+/*
+
+animaciones posibles
+http://daneden.github.io/animate.css/
+
+RANGO de colores en la app
+
+#000000
+#050F05
+#0A1F0A
+#0F2E0F
+#143D14
+#1A4C1A
+#1F5C1F
+#246B24
+#297A29
+#2E8A2E
+#339933
+#47A347
+#5CAD5C
+#70B870
+#85C285
+#99CC99
+#ADD6AD
+#C2E0C2
+#D6EBD6
+#EBF5EB
+#FFFFFF
+
+*/

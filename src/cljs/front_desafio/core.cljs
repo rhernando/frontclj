@@ -10,6 +10,7 @@
             [om-bootstrap.button :as b]
             [om-bootstrap.input :as i]
             [om-bootstrap.random :as r]
+            [om-bootstrap.grid :as grid]
             [ajax.core :refer [GET POST]]
             [taoensso.sente :as s]
             [taoensso.encore :as encore :refer (logf)]
@@ -224,23 +225,32 @@
                              (r/alert {:bs-style "danger" }; TODO cuando se pueda.... :dismiss-after 10 :on-dismiss #(close-alert % app owner)}
                                       (d/strong "Error!")
                                       error))
-                           (dom/h1 "Login")
-                           (d/form {:class "horizontal" :on-submit #(attempt-login % app owner)}
-                                   (i/input {:type "text" :label "Usuario"
-                                             :ref "username"
-                                             :id "username"
-                                             :value (:username state)
-                                             :on-change #(field-change % owner :username)
-                                             :label-classname "col-xs-2"
-                                             :wrapper-classname "col-xs-10"})
-                                   (i/input {:type "password" :label "Password"
-                                             :ref "password"
-                                             :id "password"
-                                             :value (:password state)
-                                             :on-change #(field-change % owner :password)
-                                             :label-classname "col-xs-2"
-                                             :wrapper-classname "col-xs-10"})
-                                   (b/button {:type "submit"} "Login") ) ))
+                           (grid/grid {}
+                                      (grid/row {}
+                                                (grid/col {:md 4 :md-offset 4}
+                                                          (dom/div #js {:className "animated bounceIn loginbox"}
+                                                                   (dom/div #js {:className "page-icon"} (dom/h1 nil "D F"))
+                                                                   (dom/hr nil nil)
+                                                                   (dom/h2 nil "Acceder")
+                                                                   (d/form {:class "form-horizontal" :on-submit #(attempt-login % app owner)}
+                                                                           (i/input {:type "text" :label "Usuario"
+                                                                                     :ref "username"
+                                                                                     :id "username"
+                                                                                     :value (:username state)
+                                                                                     :on-change #(field-change % owner :username)
+                                                                                     :label-classname "col-xs-5"
+                                                                                     :wrapper-classname "col-xs-6"})
+                                                                           (i/input {:type "password" :label "Password"
+                                                                                     :ref "password"
+                                                                                     :id "password"
+                                                                                     :value (:password state)
+                                                                                     :on-change #(field-change % owner :password)
+                                                                                     :label-classname "col-xs-5"
+                                                                                     :wrapper-classname "col-xs-6"})
+                                                                           (b/button {:type "submit" :bs-style "info" :class "btn-block"} "Login") )
+                                                                   )
+                                                          )))
+                           ))
     ))
 
 
