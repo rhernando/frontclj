@@ -247,7 +247,7 @@
                                                                                      :on-change #(field-change % owner :password)
                                                                                      :label-classname "col-xs-5"
                                                                                      :wrapper-classname "col-xs-6"})
-                                                                           (b/button {:type "submit" :bs-style "info" :class "btn-block"} "Login") )
+                                                                           (b/button {:type "submit" :bs-style "default" :class "btn-block"} "Login") )
                                                                    )
                                                           )))
                            ))
