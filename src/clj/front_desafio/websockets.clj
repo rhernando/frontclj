@@ -54,10 +54,9 @@
 (defn session-status
   "Tell the server what state this user's session is in."
   [req]
-  ;(when-let [uid (session-uid req)]
-    (chsk-send! (session-uid req) [:session/state (if (get-token (session-uid req)) :secure :open)])
-  ;  )
-    (chsk-send! (session-uid req) [:pepe/juan {:como "mola"}])
+  (chsk-send! (session-uid req) [:session/state (if (get-token (session-uid req)) :secure :open)])
+  (when-let [uid (session-uid req)] (keep-alive uid))
+
   )
 
 ;; Reply with the session state - either open or secure.
@@ -87,18 +86,6 @@
           (chsk-send! uid [ :user/data (select-keys token [:username :avatar]) ])
           )
         (chsk-send! uid [:auth/fail])))))
-
-;; Reply with the same message, followed by the reverse of the message a few seconds later.
-;; Also record activity to keep session alive.
-
-
-(defmethod handle-event :test/echo
-  [[_ msg] req]
-  (when-let [uid (session-uid req)]
-    (keep-alive uid)
-    (chsk-send! uid [:test/reply msg])
-    (Thread/sleep 3000)
-    (chsk-send! uid [:test/reply (clojure.string/reverse msg)])))
 
 ;; When the client pings us, send back the session state:
 

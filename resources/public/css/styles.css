@@ -1,0 +1,11 @@
+/* line 1, ../../compass/_login.scss */
+.loginpage {
+  padding-top: 50px;
+  padding-bottom: 25px;
+}
+/* line 4, ../../compass/_login.scss */
+.loginpage .form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}

@@ -49,7 +49,7 @@
     [{:as ev-msg :keys [?data]}]
     (logf "Push event from server: %s" ?data)
     (case  (first ?data)
-      :session/state (swap! app-state assoc :session/state :open)
+      :session/state (swap! app-state assoc :session/state (last ?data))
       (println "def event"))
     )
   ;; Add your (defmethod handle-event-msg! <event-id> [ev-msg] <body>)s here...
@@ -171,6 +171,11 @@
 
 (defn login-handler [response]
   (.log js/console (str response))
+  ;{:token "iADwMDSexGtT1UqvgWE2", :user_id 1, :username "rubens", :avatar "/assets/default_red.png"}
+  (when-let [{:keys [username token user_id avatar]} response]
+    (swap! app-state assoc :user {:name username :avatar avatar :token token})
+    (swap! app-state assoc :session/state :secure)
+    )
   (s/chsk-reconnect! chsk)
   )
 
@@ -184,8 +189,6 @@
   (let [username (-> (om/get-node owner "username") .-value)
         password (-> (om/get-node owner "password") .-value)]
     (om/update! app [:notify/error] nil)
-    ;(chsk-send! [:session/auth [username password]])
-    ;(sente/chsk-reconnect! chsk)
     (POST "/login"
           {:params {:username username
                     :password   password}
@@ -216,7 +219,7 @@
                 {:username "" :password ""})
     om/IRenderState
     (render-state [this state]
-                  (dom/div nil
+                  (dom/div #js {:className "container loginpage"}
                            (when-let [error (:notify/error app)]
                              (r/alert {:bs-style "danger" }; TODO cuando se pueda.... :dismiss-after 10 :on-dismiss #(close-alert % app owner)}
                                       (d/strong "Error!")
