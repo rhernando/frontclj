@@ -1,5 +1,4 @@
 @charset "UTF-8";
-@import url(layout.css);
 /* line 1, ../../compass/_login.scss */
 .loginpage {
   padding-top: 50px;
@@ -430,8 +429,8 @@ th {
 }
 @font-face {
   font-family: 'Glyphicons Halflings';
-  src: url(/fonts/glyphicons-halflings-regular.eot?1412799605);
-  src: url(/fonts/glyphicons-halflings-regular.eot?&1412799605#iefix) format("embedded-opentype"), url(/fonts/glyphicons-halflings-regular.woff?1412799605) format("woff"), url(/fonts/glyphicons-halflings-regular.ttf?1412799605) format("truetype"), url(/fonts/glyphicons-halflings-regular.svg?1412799605#glyphicons_halflingsregular) format("svg");
+  src: url(/fonts/glyphicons-halflings-regular.eot?1412837240);
+  src: url(/fonts/glyphicons-halflings-regular.eot?&1412837240#iefix) format("embedded-opentype"), url(/fonts/glyphicons-halflings-regular.woff?1412837240) format("woff"), url(/fonts/glyphicons-halflings-regular.ttf?1412837240) format("truetype"), url(/fonts/glyphicons-halflings-regular.svg?1412837240#glyphicons_halflingsregular) format("svg");
 }
 /* line 25, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_glyphicons.scss */
 .glyphicon {
@@ -8086,4 +8085,258 @@ button.close {
   .hidden-print {
     display: none !important;
   }
+}
+/*!
+ * Start Bootstrap - SB Admin Bootstrap Admin Template (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ */
+/* Global Styles */
+/* line 9, ../../compass/_layout.scss */
+body {
+  margin-top: 100px;
+  background-color: #0A1F0A;
+}
+
+@media (min-width: 768px) {
+  /* line 15, ../../compass/_layout.scss */
+  body {
+    margin-top: 50px;
+  }
+}
+/* line 20, ../../compass/_layout.scss */
+#wrapper {
+  padding-left: 0;
+}
+
+/* line 24, ../../compass/_layout.scss */
+#page-wrapper {
+  width: 100%;
+  padding: 0;
+  background-color: #fff;
+}
+
+/* line 30, ../../compass/_layout.scss */
+.huge {
+  font-size: 50px;
+  line-height: normal;
+}
+
+@media (min-width: 768px) {
+  /* line 36, ../../compass/_layout.scss */
+  #wrapper {
+    padding-left: 225px;
+  }
+
+  /* line 40, ../../compass/_layout.scss */
+  #page-wrapper {
+    padding: 10px;
+  }
+}
+/* Top Navigation */
+/* line 47, ../../compass/_layout.scss */
+.top-nav {
+  padding: 0 15px;
+}
+
+/* line 51, ../../compass/_layout.scss */
+.top-nav > li {
+  display: inline-block;
+  float: left;
+}
+
+/* line 56, ../../compass/_layout.scss */
+.top-nav > li > a {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  line-height: 20px;
+  color: #999;
+}
+
+/* line 63, ../../compass/_layout.scss */
+.top-nav > li > a:hover,
+.top-nav > li > a:focus,
+.top-nav > .open > a,
+.top-nav > .open > a:hover,
+.top-nav > .open > a:focus {
+  color: #fff;
+  background-color: #000;
+}
+
+/* line 72, ../../compass/_layout.scss */
+.top-nav > .open > .dropdown-menu {
+  float: left;
+  position: absolute;
+  margin-top: 0;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  background-color: #fff;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+}
+
+/* line 84, ../../compass/_layout.scss */
+.top-nav > .open > .dropdown-menu > li > a {
+  white-space: normal;
+}
+
+/* line 88, ../../compass/_layout.scss */
+ul.message-dropdown {
+  padding: 0;
+  max-height: 250px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* line 95, ../../compass/_layout.scss */
+li.message-preview {
+  width: 275px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+/* line 100, ../../compass/_layout.scss */
+li.message-preview > a {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+/* line 105, ../../compass/_layout.scss */
+li.message-footer {
+  margin: 5px 0;
+}
+
+/* line 109, ../../compass/_layout.scss */
+ul.alert-dropdown {
+  width: 200px;
+}
+
+/* Side Navigation */
+@media (min-width: 768px) {
+  /* line 116, ../../compass/_layout.scss */
+  .side-nav {
+    position: fixed;
+    top: 51px;
+    left: 225px;
+    width: 225px;
+    margin-left: -225px;
+    border: none;
+    border-radius: 0;
+    overflow-y: auto;
+    background-color: #222;
+  }
+
+  /* line 128, ../../compass/_layout.scss */
+  .side-nav > li > a {
+    width: 225px;
+  }
+
+  /* line 132, ../../compass/_layout.scss */
+  .side-nav li a:hover,
+  .side-nav li a:focus {
+    outline: none;
+    background-color: #000 !important;
+  }
+}
+/* line 139, ../../compass/_layout.scss */
+.side-nav > li > ul {
+  padding: 0;
+}
+
+/* line 143, ../../compass/_layout.scss */
+.side-nav > li > ul > li > a {
+  display: block;
+  padding: 10px 15px 10px 38px;
+  text-decoration: none;
+  color: #999;
+}
+
+/* line 150, ../../compass/_layout.scss */
+.side-nav > li > ul > li > a:hover {
+  color: #fff;
+}
+
+/* Flot Chart Containers */
+/* line 156, ../../compass/_layout.scss */
+.flot-chart {
+  display: block;
+  height: 400px;
+}
+
+/* line 161, ../../compass/_layout.scss */
+.flot-chart-content {
+  width: 100%;
+  height: 100%;
+}
+
+/* Custom Colored Panels */
+/* line 168, ../../compass/_layout.scss */
+.huge {
+  font-size: 40px;
+}
+
+/* line 172, ../../compass/_layout.scss */
+.panel-green {
+  border-color: #5cb85c;
+}
+
+/* line 176, ../../compass/_layout.scss */
+.panel-green .panel-heading {
+  border-color: #5cb85c;
+  color: #fff;
+  background-color: #5cb85c;
+}
+
+/* line 182, ../../compass/_layout.scss */
+.panel-green a {
+  color: #5cb85c;
+}
+
+/* line 186, ../../compass/_layout.scss */
+.panel-green a:hover {
+  color: #3d8b3d;
+}
+
+/* line 190, ../../compass/_layout.scss */
+.panel-red {
+  border-color: #d9534f;
+}
+
+/* line 194, ../../compass/_layout.scss */
+.panel-red .panel-heading {
+  border-color: #d9534f;
+  color: #fff;
+  background-color: #d9534f;
+}
+
+/* line 200, ../../compass/_layout.scss */
+.panel-red a {
+  color: #d9534f;
+}
+
+/* line 204, ../../compass/_layout.scss */
+.panel-red a:hover {
+  color: #b52b27;
+}
+
+/* line 208, ../../compass/_layout.scss */
+.panel-yellow {
+  border-color: #f0ad4e;
+}
+
+/* line 212, ../../compass/_layout.scss */
+.panel-yellow .panel-heading {
+  border-color: #f0ad4e;
+  color: #fff;
+  background-color: #f0ad4e;
+}
+
+/* line 218, ../../compass/_layout.scss */
+.panel-yellow a {
+  color: #f0ad4e;
+}
+
+/* line 222, ../../compass/_layout.scss */
+.panel-yellow a:hover {
+  color: #df8a13;
 }

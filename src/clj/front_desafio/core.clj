@@ -4,6 +4,7 @@
             [compojure.core :refer [GET POST defroutes routes]]
             [front-desafio.websockets :refer :all]
             [front-desafio.restapi :as api]
+            [front-desafio.session :as sess]
             ;[ring.util.response :as resp]
             [org.httpkit.server :as kit]
             [cheshire.core :as json]
@@ -35,12 +36,9 @@
     (println "Login request: %s" params)
     (let [token (api/signin username password)
           valid (:user_id token)]
-      (println token)
-      (println valid)
       (if valid
         (do
-          (add-token (get-in ring-request [:cookies "ring-session" :value]) (:token token))
-          ;(assoc (:session req) :uid (:user_id token))
+          (sess/add-token (get-in ring-request [:cookies "ring-session" :value]) (:token token))
           {:status 200
            :session (assoc session :uid (get-in ring-request [:cookies "ring-session" :value]))
            :body (json/generate-string token)}

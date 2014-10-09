@@ -26,7 +26,8 @@
   (def chsk       chsk)
   (def ch-chsk    ch-recv)
   (def chsk-send! send-fn)
-  (def chsk-state state)  )
+  (def chsk-state state)
+  )
 
 (defmulti event-msg-handler :id) ; Dispatch on event-id
 
@@ -42,8 +43,11 @@
 
   (defmethod event-msg-handler :chsk/state
     [{:as ev-msg :keys [?data]}]
-    (if (= ?data {:first-open? true})
-      (logf "Channel socket successfully established!")
+    (if (:first-open? ?data)
+      (do
+        (logf "Channel socket successfully established!")
+        (chsk-send! [:session/status] )
+        )
       (logf "Channel socket state change: %s" ?data)))
 
   (defmethod event-msg-handler :chsk/recv
@@ -56,20 +60,8 @@
   ;; Add your (defmethod handle-event-msg! <event-id> [ev-msg] <body>)s here...
   )
 
-(defn front-desafio-app [app owner]
-  (reify
-    om/IRender
-    (render [_]
-            (dom/h1 nil (:text app)))))
-
-;(om/root front-desafio-app app-state {:target (.getElementById js/document "title")})
-
-
 (defn navigation-view [app owner]
   (reify
-    om/IInitState
-    (init-state [this]
-                {:session/state :unknown})
     om/IRender
     (render [this]
             (dom/div nil (n/navbar
@@ -90,7 +82,6 @@
                                   (n/nav-item {:key 1 :href "#"} "Menu 1")))))
             )))
 
-;(om/root navigation-view app-state {:target (.getElementById js/document "navigator")})
 
 (defn paneluser-view [app owner]
   (reify
@@ -165,10 +156,13 @@
     om/IRender
     (render [this]
             (dom/div nil
-                     (dom/h1 "Testing")
-                     (om/build paneluser-view app {})
-                     (om/build panelteams-view app {})
-                     ))))
+                     (dom/div #js {:id "nagigator"}
+                              (om/build navigation-view app {}))
+                     (dom/div #js {:id "wrapper"}
+                              (dom/h1 "Testing")
+                              (om/build paneluser-view app {})
+                              (om/build panelteams-view app {})
+                              )))))
 
 (defn login-handler [response]
   (.log js/console (str response))
@@ -249,9 +243,7 @@
                                                                                      :wrapper-classname "col-xs-6"})
                                                                            (b/button {:type "submit" :bs-style "default" :class "btn-block"} "Login") )
                                                                    )
-                                                          )))
-                           ))
-    ))
+                                                          ))) ))   ))
 
 
 
@@ -268,6 +260,11 @@
     (will-mount [this]
                 (s/start-chsk-router! ch-chsk event-msg-handler*)
                 )
+    om/IDidMount
+    (did-mount [this]
+               (println "VOY")
+               (chsk-send! [:session/status] )
+               )
     om/IRenderState
     (render-state [this state]
                   (dom/div #js {:style #js {:width "100%"}}
@@ -288,7 +285,7 @@
                  :user {:name nil :avatar nil}
                  :teams '()
                  :league nil
-                 :session/state :open
+                 :session/state :unknown
                  }))
 
 (om/root application

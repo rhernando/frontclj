@@ -1,8 +1,9 @@
 (ns front-desafio.websockets
-  (:require [clojure.core.cache :as cache]
-            [taoensso.sente :as s]
-            [front-desafio.restapi :as api]
-            [clojure.core.async :as async :refer [<! <!! chan go thread]])
+  (:require
+   [taoensso.sente :as s]
+   [front-desafio.restapi :as api]
+   [front-desafio.session :as session]
+   [clojure.core.async :as async :refer [<! <!! chan go thread]])
   )
 
 ;; create the Sente web socket connection stuff when we are loaded:
@@ -16,30 +17,6 @@
   (def chsk-send!       send-fn)
   (def connected-uids                connected-uids) )
 
-;; session cache to maintain authentication - so we can rely
-;; entirely on socket communication instead of needing to login
-;; to the application first: 20 minutes of inactive will log you out
-(def session-map (atom (cache/ttl-cache-factory {} :ttl (* 5 60 1000))))
-
-(defn keep-alive
-  "Given a UID, keep it alive."
-  [uid]
-  (println "keep-alive" uid (java.util.Date.))
-  (when-let [token (get @session-map uid)]
-    (swap! session-map assoc uid token)))
-
-(defn add-token
-  "Given a UID and a token, remember it."
-  [uid token]
-  (println "add-token" uid token (java.util.Date.))
-  (swap! session-map assoc uid token))
-
-(defn get-token
-  "Given a UID, retrieve the associated token, if any."
-  [uid]
-  (let [token (get @session-map uid)]
-    (println "get-token" uid token (java.util.Date.))
-    token))
 
 (defn session-uid
   "Convenient to extract the UID that Sente needs from the request."
@@ -54,18 +31,10 @@
 (defn session-status
   "Tell the server what state this user's session is in."
   [req]
-  (chsk-send! (session-uid req) [:session/state (if (get-token (session-uid req)) :secure :open)])
-  (when-let [uid (session-uid req)] (keep-alive uid))
+  (chsk-send! (session-uid req) [:session/state (if (session/get-token (session-uid req)) :secure :open)])
+  (when-let [uid (session-uid req)] (session/keep-alive uid))
 
   )
-
-;; Reply with the session state - either open or secure.
-
-(defmethod handle-event :session/status
-  [_ req]
-  (session-status req))
-
-
 
 ;; Reply with authentication failure or success.
 ;; For a successful authentication, remember the login.
@@ -80,7 +49,7 @@
       ; DUDA : meter token o ID usuario
       (if valid
         (do
-          (add-token uid (:token token))
+          (session/add-token uid (:token token))
           ;(assoc (:session req) :uid (:user_id token))
           (chsk-send! uid [ :auth/success ])
           (chsk-send! uid [ :user/data (select-keys token [:username :avatar]) ])
@@ -92,6 +61,13 @@
 (defmethod handle-event :chsk/ws-ping
   [_ req]
   (session-status req))
+
+;; Reply with the session state - either open or secure.
+(defmethod handle-event :session/status
+  [_ req]
+  (session-status req)
+  ; enviar tambien datos basicos de sesion al usuario
+  )
 
 
 ;; Handle unknown events.
