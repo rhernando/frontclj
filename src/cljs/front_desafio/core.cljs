@@ -55,6 +55,9 @@
     (logf "Push event from server: %s" ?data)
     (case  (first ?data)
       :session/state (swap! app-state assoc :session/state (last ?data))
+      :user/data (let
+                   [{:keys [username avatar token]} (last ?data)]
+                   (swap! app-state assoc :user {:name username :avatar avatar :token token}))
       (println "def event"))
     )
   ;; Add your (defmethod handle-event-msg! <event-id> [ev-msg] <body>)s here...
