@@ -8,7 +8,8 @@
     }
     position: relative;
     max-width: 480px;
-    background: #417A41;
+      color: #CFE3CE;
+    background: #021401;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
@@ -27,11 +28,11 @@
   -webkit-border-radius: 100px;
   -moz-border-radius: 100px;
   border-radius: 100px;
-  background: #1F3B1F;
+  background: #163514;
   text-align: center;
   margin: -60px auto 0;
   p, h1, img {
-    color: #63BA63;
+    color: #CFE3CE;
     vertical-align: middle;
     margin: 25px 0 0 0;
     opacity: 0.6;
@@ -41,18 +42,4 @@
   }
 }
 
-/*
 
-animaciones posibles
-http://daneden.github.io/animate.css/
-
-RANGO de colores en la app
-
-#000000
-#0A1F0A -- body - letra oscura
-#1F3B1F  -- circulos logo
-#417A41  -- fondo panel
-#63BA63  -- titulos claros
-#FFFFFF
-
-*/

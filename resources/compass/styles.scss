@@ -1,5 +1,24 @@
-@import 'login';
 @import "bootstrap-compass";
 @import "override_bootstrap";
 @import "bootstrap";
 @import 'layout';
+@import 'login';
+@import 'panel';
+
+
+
+/*
+
+animaciones posibles
+http://daneden.github.io/animate.css/
+
+RANGO de colores en la app
+
+#000000
+#021401 -- body - letra oscura
+#163514  -- circulos logo
+#6B8F69  -- fondo panel
+#CFE3CE  -- titulos claros
+#FFFFFF
+
+*/

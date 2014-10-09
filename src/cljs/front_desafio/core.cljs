@@ -68,7 +68,7 @@
     om/IRender
     (render [this]
             (dom/div nil (n/navbar
-                          {:fixed-top? true :inverse? true :toggle-nav-key ".navbar-ex1-collapse" :brand "DF"}
+                          {:fixed-top? true :inverse? false :toggle-nav-key ".navbar-ex1-collapse" :brand "DF"}
                           (n/nav
                            {:collapsible? true :pull-right? true :bs-style "right"}
                            (n/nav-item {:key 1 :href "#"} "Link")
@@ -162,10 +162,11 @@
                      (dom/div #js {:id "nagigator"}
                               (om/build navigation-view app {}))
                      (dom/div #js {:id "wrapper"}
-                              (dom/h1 "Testing")
-                              (om/build paneluser-view app {})
-                              (om/build panelteams-view app {})
-                              )))))
+                              (dom/div #js {:id "page-wrapper"}
+                                       (dom/div #js {:className "container-fluid"}(dom/h1 "Testing")
+                                       (om/build paneluser-view app {})
+                                       (om/build panelteams-view app {})
+                                       )))))))
 
 (defn login-handler [response]
   (.log js/console (str response))
@@ -284,7 +285,6 @@
 ; estructura de la aplicacion
 (def app-state (atom
                 {
-                 :text "Inicio"
                  :user {:name nil :avatar nil}
                  :teams '()
                  :league nil
@@ -298,7 +298,7 @@
 
 ;; PRUEBAS estaticas
 ;(swap! app-state assoc :text "hola")
-;(swap! app-state assoc :user {:name "yomismo"})
+;(swap! app-state assoc :user {:name "pp"})
 
 ;(swap! app-state update-in [:teams] concat (list {:name "as" :balance 22 :score 2}))
 ;(swap! app-state update-in [:teams] concat (list {:name "dedw3" :balance 223 :score 442}))

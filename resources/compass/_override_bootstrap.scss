@@ -33,7 +33,7 @@ $icon-font-path: '';
 //## Settings for some of the most global styles.
 
 //** Background color for `<body>`.
-$body-bg:               #0A1F0A;
+$body-bg:               #CFE3CE;
 //** Global text color on `<body>`.
 // $text-color:            $gray-dark
 
@@ -147,9 +147,9 @@ $body-bg:               #0A1F0A;
 
 // $btn-font-weight:                normal
 
-//$btn-default-color:              #333;
-$btn-default-bg:                 #63BA63;
-$btn-default-border:             #0A1F0A;
+$btn-default-color:              #021401;
+$btn-default-bg:                 #6B8F69;
+$btn-default-border:             #163514;
 
 // $btn-primary-color:              #fff
 // $btn-primary-bg:                 $brand-primary
@@ -341,8 +341,8 @@ $btn-default-border:             #0A1F0A;
 // $navbar-padding-vertical:          (($navbar-height - $line-height-computed) / 2)
 // $navbar-collapse-max-height:       340px
 
-// $navbar-default-color:             #777
-// $navbar-default-bg:                #f8f8f8
+$navbar-default-color:             #021401;
+$navbar-default-bg:                #CFE3CE;
 // $navbar-default-border:            darken($navbar-default-bg, 6.5%)
 
 // Navbar links

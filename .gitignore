@@ -11,3 +11,4 @@ pom.xml.asc
 .lein-failures
 resources/public/js/out/
 .sass-cache
+resources/public/js/out

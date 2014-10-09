@@ -1,66 +1,4 @@
 @charset "UTF-8";
-/* line 1, ../../compass/_login.scss */
-.loginpage {
-  padding-top: 50px;
-  padding-bottom: 25px;
-}
-/* line 5, ../../compass/_login.scss */
-.loginpage .loginbox {
-  position: relative;
-  max-width: 480px;
-  background: #417A41;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  padding-bottom: 20px;
-  margin-top: 80px;
-}
-/* line 6, ../../compass/_login.scss */
-.loginpage .loginbox h2 {
-  text-align: center;
-}
-/* line 18, ../../compass/_login.scss */
-.loginpage .form-signin {
-  max-width: 330px;
-  padding: 15px;
-  margin: 0 auto;
-}
-
-/* line 24, ../../compass/_login.scss */
-.page-icon {
-  width: 100px;
-  height: 100px;
-  -webkit-border-radius: 100px;
-  -moz-border-radius: 100px;
-  border-radius: 100px;
-  background: #1F3B1F;
-  text-align: center;
-  margin: -60px auto 0;
-}
-/* line 33, ../../compass/_login.scss */
-.page-icon p, .page-icon h1, .page-icon img {
-  color: #63BA63;
-  vertical-align: middle;
-  margin: 25px 0 0 0;
-  opacity: 0.6;
-  padding-top: 30px;
-}
-
-/*
-
-animaciones posibles
-http://daneden.github.io/animate.css/
-
-RANGO de colores en la app
-
-#000000
-#0A1F0A -- body - letra oscura
-#1F3B1F  -- circulos logo
-#417A41  -- fondo panel
-#63BA63  -- titulos claros
-#FFFFFF
-
-*/
 /*! normalize.css v3.0.1 | MIT License | git.io/normalize */
 /* line 9, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_normalize.scss */
 html {
@@ -429,8 +367,8 @@ th {
 }
 @font-face {
   font-family: 'Glyphicons Halflings';
-  src: url(/fonts/glyphicons-halflings-regular.eot?1412837240);
-  src: url(/fonts/glyphicons-halflings-regular.eot?&1412837240#iefix) format("embedded-opentype"), url(/fonts/glyphicons-halflings-regular.woff?1412837240) format("woff"), url(/fonts/glyphicons-halflings-regular.ttf?1412837240) format("truetype"), url(/fonts/glyphicons-halflings-regular.svg?1412837240#glyphicons_halflingsregular) format("svg");
+  src: url(/fonts/glyphicons-halflings-regular.eot?1412799605);
+  src: url(/fonts/glyphicons-halflings-regular.eot?&1412799605#iefix) format("embedded-opentype"), url(/fonts/glyphicons-halflings-regular.woff?1412799605) format("woff"), url(/fonts/glyphicons-halflings-regular.ttf?1412799605) format("truetype"), url(/fonts/glyphicons-halflings-regular.svg?1412799605#glyphicons_halflingsregular) format("svg");
 }
 /* line 25, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_glyphicons.scss */
 .glyphicon {
@@ -1472,7 +1410,7 @@ body {
   font-size: 14px;
   line-height: 1.428571429;
   color: #333333;
-  background-color: #0A1F0A;
+  background-color: #CFE3CE;
 }
 
 /* line 36, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_scaffolding.scss */
@@ -1529,7 +1467,7 @@ img {
 .img-thumbnail {
   padding: 4px;
   line-height: 1.428571429;
-  background-color: #0A1F0A;
+  background-color: #CFE3CE;
   border: 1px solid #ddd;
   border-radius: 4px;
   -webkit-transition: all 0.2s ease-in-out;
@@ -3259,7 +3197,7 @@ th {
 }
 /* line 56, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_tables.scss */
 .table .table {
-  background-color: #0A1F0A;
+  background-color: #CFE3CE;
 }
 
 /* line 69, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_tables.scss */
@@ -4110,7 +4048,7 @@ select[multiple].input-lg,
 }
 /* line 30, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_buttons.scss */
 .btn:hover, .btn:focus {
-  color: #333;
+  color: #021401;
   text-decoration: none;
 }
 /* line 36, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_buttons.scss */
@@ -4132,15 +4070,15 @@ select[multiple].input-lg,
 
 /* line 57, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_buttons.scss */
 .btn-default {
-  color: #333;
-  background-color: #63BA63;
-  border-color: #0A1F0A;
+  color: #021401;
+  background-color: #6B8F69;
+  border-color: #163514;
 }
 /* line 11, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/mixins/_buttons.scss */
 .btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open > .btn-default.dropdown-toggle {
-  color: #333;
-  background-color: #48a248;
-  border-color: black;
+  color: #021401;
+  background-color: #557253;
+  border-color: #040903;
 }
 /* line 20, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/mixins/_buttons.scss */
 .btn-default:active, .btn-default.active, .open > .btn-default.dropdown-toggle {
@@ -4148,13 +4086,13 @@ select[multiple].input-lg,
 }
 /* line 28, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/mixins/_buttons.scss */
 .btn-default.disabled, .btn-default.disabled:hover, .btn-default.disabled:focus, .btn-default.disabled:active, .btn-default.disabled.active, .btn-default[disabled], .btn-default[disabled]:hover, .btn-default[disabled]:focus, .btn-default[disabled]:active, .btn-default[disabled].active, fieldset[disabled] .btn-default, fieldset[disabled] .btn-default:hover, fieldset[disabled] .btn-default:focus, fieldset[disabled] .btn-default:active, fieldset[disabled] .btn-default.active {
-  background-color: #63BA63;
-  border-color: #0A1F0A;
+  background-color: #6B8F69;
+  border-color: #163514;
 }
 /* line 38, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/mixins/_buttons.scss */
 .btn-default .badge {
-  color: #63BA63;
-  background-color: #333;
+  color: #6B8F69;
+  background-color: #021401;
 }
 
 /* line 60, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_buttons.scss */
@@ -5043,7 +4981,7 @@ tbody.collapse.in {
 /* line 96, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_navs.scss */
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
   color: #555555;
-  background-color: #0A1F0A;
+  background-color: #CFE3CE;
   border: 1px solid #ddd;
   border-bottom-color: transparent;
   cursor: default;
@@ -5136,7 +5074,7 @@ tbody.collapse.in {
   .nav-tabs.nav-justified > .active > a:hover,
   .nav-tabs-justified > .active > a:focus,
   .nav-tabs.nav-justified > .active > a:focus {
-    border-bottom-color: #0A1F0A;
+    border-bottom-color: #CFE3CE;
   }
 }
 
@@ -5523,8 +5461,8 @@ tbody.collapse.in {
 
 /* line 394, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default {
-  background-color: #f8f8f8;
-  border-color: #e7e7e7;
+  background-color: #CFE3CE;
+  border-color: #bad7b9;
 }
 /* line 398, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-brand {
@@ -5537,7 +5475,7 @@ tbody.collapse.in {
 }
 /* line 407, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-text {
-  color: #777;
+  color: #021401;
 }
 /* line 412, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-nav > li > a {
@@ -5551,7 +5489,7 @@ tbody.collapse.in {
 /* line 422, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
   color: #555;
-  background-color: #e7e7e7;
+  background-color: #bad7b9;
 }
 /* line 430, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-nav > .disabled > a, .navbar-default .navbar-nav > .disabled > a:hover, .navbar-default .navbar-nav > .disabled > a:focus {
@@ -5573,11 +5511,11 @@ tbody.collapse.in {
 /* line 450, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-collapse,
 .navbar-default .navbar-form {
-  border-color: #e7e7e7;
+  border-color: #bad7b9;
 }
 /* line 459, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
-  background-color: #e7e7e7;
+  background-color: #bad7b9;
   color: #555;
 }
 @media (max-width: 767px) {
@@ -5593,7 +5531,7 @@ tbody.collapse.in {
   /* line 479, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
     color: #555;
-    background-color: #e7e7e7;
+    background-color: #bad7b9;
   }
   /* line 487, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a, .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:focus {
@@ -6100,7 +6038,7 @@ a.badge:hover, a.badge:focus {
   padding: 4px;
   margin-bottom: 20px;
   line-height: 1.428571429;
-  background-color: #0A1F0A;
+  background-color: #CFE3CE;
   border: 1px solid #ddd;
   border-radius: 4px;
   -webkit-transition: all 0.2s ease-in-out;
@@ -8095,75 +8033,62 @@ button.close {
 /* line 9, ../../compass/_layout.scss */
 body {
   margin-top: 100px;
-  background-color: #0A1F0A;
 }
 
 @media (min-width: 768px) {
-  /* line 15, ../../compass/_layout.scss */
+  /* line 14, ../../compass/_layout.scss */
   body {
     margin-top: 50px;
   }
 }
-/* line 20, ../../compass/_layout.scss */
+/* line 19, ../../compass/_layout.scss */
 #wrapper {
   padding-left: 0;
 }
 
-/* line 24, ../../compass/_layout.scss */
+/* line 23, ../../compass/_layout.scss */
 #page-wrapper {
   width: 100%;
   padding: 0;
-  background-color: #fff;
 }
 
-/* line 30, ../../compass/_layout.scss */
+/* line 28, ../../compass/_layout.scss */
 .huge {
   font-size: 50px;
   line-height: normal;
 }
 
 @media (min-width: 768px) {
-  /* line 36, ../../compass/_layout.scss */
+  /* line 34, ../../compass/_layout.scss */
   #wrapper {
     padding-left: 225px;
   }
 
-  /* line 40, ../../compass/_layout.scss */
+  /* line 38, ../../compass/_layout.scss */
   #page-wrapper {
     padding: 10px;
   }
 }
 /* Top Navigation */
-/* line 47, ../../compass/_layout.scss */
+/* line 45, ../../compass/_layout.scss */
 .top-nav {
   padding: 0 15px;
 }
 
-/* line 51, ../../compass/_layout.scss */
+/* line 49, ../../compass/_layout.scss */
 .top-nav > li {
   display: inline-block;
   float: left;
 }
 
-/* line 56, ../../compass/_layout.scss */
+/* line 54, ../../compass/_layout.scss */
 .top-nav > li > a {
   padding-top: 15px;
   padding-bottom: 15px;
   line-height: 20px;
-  color: #999;
 }
 
-/* line 63, ../../compass/_layout.scss */
-.top-nav > li > a:hover,
-.top-nav > li > a:focus,
-.top-nav > .open > a,
-.top-nav > .open > a:hover,
-.top-nav > .open > a:focus {
-  color: #fff;
-  background-color: #000;
-}
-
-/* line 72, ../../compass/_layout.scss */
+/* line 61, ../../compass/_layout.scss */
 .top-nav > .open > .dropdown-menu {
   float: left;
   position: absolute;
@@ -8171,17 +8096,16 @@ body {
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  background-color: #fff;
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 }
 
-/* line 84, ../../compass/_layout.scss */
+/* line 72, ../../compass/_layout.scss */
 .top-nav > .open > .dropdown-menu > li > a {
   white-space: normal;
 }
 
-/* line 88, ../../compass/_layout.scss */
+/* line 76, ../../compass/_layout.scss */
 ul.message-dropdown {
   padding: 0;
   max-height: 250px;
@@ -8189,31 +8113,31 @@ ul.message-dropdown {
   overflow-y: auto;
 }
 
-/* line 95, ../../compass/_layout.scss */
+/* line 83, ../../compass/_layout.scss */
 li.message-preview {
   width: 275px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 }
 
-/* line 100, ../../compass/_layout.scss */
+/* line 88, ../../compass/_layout.scss */
 li.message-preview > a {
   padding-top: 15px;
   padding-bottom: 15px;
 }
 
-/* line 105, ../../compass/_layout.scss */
+/* line 93, ../../compass/_layout.scss */
 li.message-footer {
   margin: 5px 0;
 }
 
-/* line 109, ../../compass/_layout.scss */
+/* line 97, ../../compass/_layout.scss */
 ul.alert-dropdown {
   width: 200px;
 }
 
 /* Side Navigation */
 @media (min-width: 768px) {
-  /* line 116, ../../compass/_layout.scss */
+  /* line 104, ../../compass/_layout.scss */
   .side-nav {
     position: fixed;
     top: 51px;
@@ -8223,120 +8147,115 @@ ul.alert-dropdown {
     border: none;
     border-radius: 0;
     overflow-y: auto;
-    background-color: #222;
   }
 
-  /* line 128, ../../compass/_layout.scss */
+  /* line 115, ../../compass/_layout.scss */
   .side-nav > li > a {
     width: 225px;
   }
 
-  /* line 132, ../../compass/_layout.scss */
+  /* line 119, ../../compass/_layout.scss */
   .side-nav li a:hover,
   .side-nav li a:focus {
     outline: none;
-    background-color: #000 !important;
   }
 }
-/* line 139, ../../compass/_layout.scss */
+/* line 126, ../../compass/_layout.scss */
 .side-nav > li > ul {
   padding: 0;
 }
 
-/* line 143, ../../compass/_layout.scss */
+/* line 130, ../../compass/_layout.scss */
 .side-nav > li > ul > li > a {
   display: block;
   padding: 10px 15px 10px 38px;
   text-decoration: none;
-  color: #999;
-}
-
-/* line 150, ../../compass/_layout.scss */
-.side-nav > li > ul > li > a:hover {
-  color: #fff;
 }
 
 /* Flot Chart Containers */
-/* line 156, ../../compass/_layout.scss */
+/* line 138, ../../compass/_layout.scss */
 .flot-chart {
   display: block;
   height: 400px;
 }
 
-/* line 161, ../../compass/_layout.scss */
+/* line 143, ../../compass/_layout.scss */
 .flot-chart-content {
   width: 100%;
   height: 100%;
 }
 
 /* Custom Colored Panels */
-/* line 168, ../../compass/_layout.scss */
+/* line 150, ../../compass/_layout.scss */
 .huge {
   font-size: 40px;
 }
 
-/* line 172, ../../compass/_layout.scss */
-.panel-green {
-  border-color: #5cb85c;
+/* line 1, ../../compass/_login.scss */
+.loginpage {
+  padding-top: 50px;
+  padding-bottom: 25px;
+}
+/* line 5, ../../compass/_login.scss */
+.loginpage .loginbox {
+  position: relative;
+  max-width: 480px;
+  color: #CFE3CE;
+  background: #021401;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  padding-bottom: 20px;
+  margin-top: 80px;
+}
+/* line 6, ../../compass/_login.scss */
+.loginpage .loginbox h2 {
+  text-align: center;
+}
+/* line 19, ../../compass/_login.scss */
+.loginpage .form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
 }
 
-/* line 176, ../../compass/_layout.scss */
-.panel-green .panel-heading {
-  border-color: #5cb85c;
-  color: #fff;
-  background-color: #5cb85c;
+/* line 25, ../../compass/_login.scss */
+.page-icon {
+  width: 100px;
+  height: 100px;
+  -webkit-border-radius: 100px;
+  -moz-border-radius: 100px;
+  border-radius: 100px;
+  background: #163514;
+  text-align: center;
+  margin: -60px auto 0;
+}
+/* line 34, ../../compass/_login.scss */
+.page-icon p, .page-icon h1, .page-icon img {
+  color: #CFE3CE;
+  vertical-align: middle;
+  margin: 25px 0 0 0;
+  opacity: 0.6;
+  padding-top: 30px;
 }
 
-/* line 182, ../../compass/_layout.scss */
-.panel-green a {
-  color: #5cb85c;
+/* line 1, ../../compass/_panel.scss */
+#page-wrapper {
+  background: #021401;
 }
 
-/* line 186, ../../compass/_layout.scss */
-.panel-green a:hover {
-  color: #3d8b3d;
-}
+/*
 
-/* line 190, ../../compass/_layout.scss */
-.panel-red {
-  border-color: #d9534f;
-}
+animaciones posibles
+http://daneden.github.io/animate.css/
 
-/* line 194, ../../compass/_layout.scss */
-.panel-red .panel-heading {
-  border-color: #d9534f;
-  color: #fff;
-  background-color: #d9534f;
-}
+RANGO de colores en la app
 
-/* line 200, ../../compass/_layout.scss */
-.panel-red a {
-  color: #d9534f;
-}
+#000000
+#021401 -- body - letra oscura
+#163514  -- circulos logo
+#6B8F69  -- fondo panel
+#CFE3CE  -- titulos claros
+#FFFFFF
 
-/* line 204, ../../compass/_layout.scss */
-.panel-red a:hover {
-  color: #b52b27;
-}
-
-/* line 208, ../../compass/_layout.scss */
-.panel-yellow {
-  border-color: #f0ad4e;
-}
-
-/* line 212, ../../compass/_layout.scss */
-.panel-yellow .panel-heading {
-  border-color: #f0ad4e;
-  color: #fff;
-  background-color: #f0ad4e;
-}
-
-/* line 218, ../../compass/_layout.scss */
-.panel-yellow a {
-  color: #f0ad4e;
-}
-
-/* line 222, ../../compass/_layout.scss */
-.panel-yellow a:hover {
-  color: #df8a13;
-}
+*/
