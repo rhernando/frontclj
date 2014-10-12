@@ -11,6 +11,7 @@
             [om-bootstrap.input :as i]
             [om-bootstrap.random :as r]
             [om-bootstrap.grid :as grid]
+            [om-bootstrap.panel :as panel]
             [ajax.core :refer [GET POST]]
             [taoensso.sente :as s]
             [taoensso.encore :as encore :refer (logf)]
@@ -58,6 +59,7 @@
       :user/data (let
                    [{:keys [username avatar token]} (last ?data)]
                    (swap! app-state assoc :user {:name username :avatar avatar :token token}))
+      :game/teams (swap! app-state assoc :teams (last ?data))
       (println "def event"))
     )
   ;; Add your (defmethod handle-event-msg! <event-id> [ev-msg] <body>)s here...
@@ -73,7 +75,7 @@
                            {:collapsible? true :pull-right? true :bs-style "right"}
                            (n/nav-item {:key 1 :href "#"} "Link")
                            (n/nav-item {:key 2 :href "#"} "Link")
-                           (b/dropdown {:key 3, :title "Dropdown"}
+                           (b/dropdown {:key 3, :title (r/glyphicon {:glyph "user"}(get-in app [:user :name] ))}
                                        (b/menu-item {:key 1} "Action")
                                        (b/menu-item {:key 2} "Another action")
                                        (b/menu-item {:key 3} "Something else here")
@@ -100,14 +102,21 @@
   (reify
     om/IRenderState
     (render-state [this {:keys [delete ]}]
-                  (dom/tr nil
-                          (dom/td nil (:name team))
-                          (dom/td nil (:balance team))
-                          (dom/td nil (:score team))
-                          (dom/td nil
-                                  (dom/button #js {:onClick (fn [e] (put! delete team))} "delete")
-                                  (dom/button nil "select"))
-                          )
+                  (let [team-class (if (:activa team) "list-group-item active" "list-group-item")]
+                  (d/li {:class team-class }
+                        (dom/div nil
+                                 (dom/h4 nil (:nombre team))
+                                 (dom/p nil "Liga " (get-in team [:liga :nombre] ) ". Saldo " (:saldo team))
+                                 )
+                        ))
+                  ;(dom/tr nil
+                          ;(dom/td nil (:name team))
+                          ;(dom/td nil (:balance team))
+                          ;(dom/td nil (:score team))
+                          ;(dom/td nil
+                          ;        (dom/button #js {:onClick (fn [e] (put! delete team))} "delete")
+                          ;        (dom/button nil "select"))
+                          ;)
 
                   )
     )
@@ -134,15 +143,17 @@
     (render-state [this {:keys [delete show]}]
                   (dom/div nil
                            (if (> (count (:teams app)) 0)
-                             (dom/table
-                              #js {:className "table table-bordered table-hover table-striped"}
-                              (apply dom/thead nil
-                                     (for [h '("nom" "€" "pts")
-                                           :let [hs (str h)]]
-                                       (dom/th nil hs)))
-                              (apply dom/tbody nil
-                                     (om/build-all teamrow-view (:teams app)
-                                                   {:init-state {:delete delete}} )))))
+                             (panel/panel
+                              {:header "Mis equipos"
+                               :list-group (d/ul {:class "list-group"}
+                                                 (om/build-all teamrow-view (:teams app)
+                                                   {:init-state {:delete delete}} )
+                                                 ;(d/li {:class "list-group-item"} "Item 1")
+                                                 ;(d/li {:class "list-group-item"} "Item 2")
+                                                 ;(d/li {:class "list-group-item"} "Item 3")
+                                                 )}
+                              nil)
+                             ))
                   ))
   )
 
@@ -164,9 +175,9 @@
                      (dom/div #js {:id "wrapper"}
                               (dom/div #js {:id "page-wrapper"}
                                        (dom/div #js {:className "container-fluid"}(dom/h1 "Testing")
-                                       (om/build paneluser-view app {})
-                                       (om/build panelteams-view app {})
-                                       )))))))
+                                                (om/build paneluser-view app {})
+                                                (om/build panelteams-view app {})
+                                                )))))))
 
 (defn login-handler [response]
   (.log js/console (str response))

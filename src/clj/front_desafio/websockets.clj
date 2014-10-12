@@ -36,6 +36,13 @@
 
   )
 
+;; sen all data to user, in fragments
+(defn send-game-data
+  [token uid]
+  (let [data (api/team-data token)]
+    (chsk-send! uid [ :game/teams  data]))
+  )
+
 ;; Reply with authentication failure or success.
 ;; For a successful authentication, remember the login.
 
@@ -53,6 +60,7 @@
           ;(assoc (:session req) :uid (:user_id token))
           (chsk-send! uid [ :auth/success ])
           (chsk-send! uid [ :user/data (select-keys token [:username :avatar]) ])
+          (send-game-data (:token token uid))
           )
         (chsk-send! uid [:auth/fail])))))
 
@@ -71,7 +79,8 @@
   (when-let [token (session/get-token (session-uid req))]
     (let [data (api/user-data token)]
       (chsk-send! (session-uid req) [ :user/data (select-keys data [:username :avatar]) ])
-      ))
+      )
+    (send-game-data token (session-uid req)))
 
   )
 
