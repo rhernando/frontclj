@@ -94,8 +94,8 @@
     om/IRender
     (render [this]
             (dom/div nil (panel/panel
-                          {:header "Mis equipos"}
-                          (dom/p nil (dom/span nil (get-in app [:user :name] ))))
+                          {:header (get-in app [:user :name] )}
+                          (dom/p nil (dom/img  #js {:src (get-in app [:user :avatar] )} nil)))
                      ))))
 ;(om/root paneluser-view  app-state {:target (.getElementById js/document "user-pn")})
 
@@ -110,7 +110,8 @@
                           (dom/a #js {:className team-class }
                                    (dom/h4 #js {:className "list-group-item-heading" } (:nombre team))
                                    (dom/p #js {:className "list-group-item-text" }
-                                          "Liga " (get-in team [:liga :nombre] ) ". Saldo: " (.format (goog.i18n.NumberFormat. 1) (:saldo team)))
+                                          "Liga " (get-in team [:liga :nombre] ) ". Saldo: "
+                                          (.format (goog.i18n.NumberFormat. 1) (:saldo team)) " €. Valor: " (.format (goog.i18n.NumberFormat. 1) (:valor team)))
                                    )
                           )
                   ;)
