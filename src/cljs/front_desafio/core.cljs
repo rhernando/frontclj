@@ -106,17 +106,14 @@
     om/IRenderState
     (render-state [this {:keys [delete ]}]
                   (let [team-class (if (:activa team) "list-group-item active" "list-group-item")]
-                    (d/li {:class team-class }
-                          (dom/div nil
-                                   (dom/h4 nil (:nombre team))
-                                   (dom/p nil "Liga " (get-in team [:liga :nombre] ) ". Saldo: " (.format (goog.i18n.NumberFormat. 1) (:saldo team)))
+                    ;(d/li
+                          (dom/a #js {:className team-class }
+                                   (dom/h4 #js {:className "list-group-item-heading" } (:nombre team))
+                                   (dom/p #js {:className "list-group-item-text" }
+                                          "Liga " (get-in team [:liga :nombre] ) ". Saldo: " (.format (goog.i18n.NumberFormat. 1) (:saldo team)))
                                    )
-                          ))
-                  ;(dom/tr nil
-                  ;(dom/td nil (:name team))
-                  ;(dom/td nil (:balance team))
-                  ;(dom/td nil (:score team))
-                  ;(dom/td nil
+                          )
+                  ;)
                   ;        (dom/button #js {:onClick (fn [e] (put! delete team))} "delete")
                   ;        (dom/button nil "select"))
                   ;)
@@ -148,10 +145,10 @@
                            (if (> (count (:teams app)) 0)
                              (panel/panel
                               {:header "Mis equipos"
-                               :list-group (d/ul {:class "list-group"}
-                                                 (om/build-all teamrow-view (:teams app)
+                               :list-group
+                               (om/build-all teamrow-view (:teams app)
                                                                {:init-state {:delete delete}} )
-                                                 )}
+                               }
                               nil)
                              ))
                   ))
