@@ -40,7 +40,14 @@
 (defn send-game-data
   [token uid]
   (let [data (api/team-data token)]
-    (chsk-send! uid [ :game/teams  data]))
+    (chsk-send! uid [ :game/teams  data])
+    (let [
+               idteam (:id (first (filter #(= true (:activa %)) data)))
+               lineup (api/team-lineup token idteam)]
+      (chsk-send! uid [ :team/lineup  lineup])
+
+      )
+    )
   )
 
 ;; Reply with authentication failure or success.

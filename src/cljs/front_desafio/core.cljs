@@ -155,6 +155,56 @@
                   ))
   )
 
+;; jornada actual
+(defn panelround-view [app owner]
+  (reify
+    om/IRender
+    (render [this]
+            (dom/div nil (panel/panel
+                          {:header "Jornada Actual"}
+                          ;(dom/p nil (dom/img  #js {:src (get-in app [:user :avatar] )} nil))
+                          )))))
+
+;; Amigos
+(defn panelfriends-view [app owner]
+  (reify
+    om/IRender
+    (render [this]
+            (dom/div nil (panel/panel
+                          {:header "Mis amigos"}
+                          ;(dom/p nil (dom/img  #js {:src (get-in app [:user :avatar] )} nil))
+                          )))))
+
+;; alineacion
+(defn panellineup-view [app owner]
+  (reify
+    om/IRender
+    (render [this]
+            (dom/div nil (panel/panel
+                          {:header "Alineacion"}
+                          ;(dom/p nil (dom/img  #js {:src (get-in app [:user :avatar] )} nil))
+                          )))))
+
+;; Negociaciones fichajes abiertos
+(defn panelmarket-view [app owner]
+  (reify
+    om/IRender
+    (render [this]
+            (dom/div nil (panel/panel
+                          {:header "Mercado"}
+                          ;(dom/p nil (dom/img  #js {:src (get-in app [:user :avatar] )} nil))
+                          )))))
+
+;; Clasificacion
+(defn panelstandings-view [app owner]
+  (reify
+    om/IRender
+    (render [this]
+            (dom/div nil (panel/panel
+                          {:header "Clasificación"}
+                          ;(dom/p nil (dom/img  #js {:src (get-in app [:user :avatar] )} nil))
+                          )))))
+
 (defn field-change
   "Generic input field updater. Keeps state in sync with input."
   [e owner field]
@@ -176,7 +226,17 @@
                                                   (grid/row {}
                                                             (grid/col {:md 4 } (om/build paneluser-view app {}))
                                                             (grid/col {:md 4 } (om/build panelteams-view app {}))
-                                                            ))))))))
+                                                            (grid/col {:md 4 } (om/build panelround-view app {}))
+                                                            )
+                                                  (grid/row {}
+                                                            (grid/col {:md 4 } (om/build panellineup-view app {}))
+                                                            (grid/col {:md 4 } (om/build panelmarket-view app {}))
+                                                            (grid/col {:md 4 } (om/build panelstandings-view app {}))
+                                                            )
+                                                  (grid/row {}
+                                                            (grid/col {:md 4 } (om/build panelfriends-view app {}))
+                                                            )
+                                                  )))))))
 
 (defn login-handler [response]
   (.log js/console (str response))
