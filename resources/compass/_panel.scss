@@ -1,3 +1,23 @@
 #page-wrapper{
   background: #CFE3CE;
 }
+
+table.alineacion{
+  td img.minifoto{
+    width: 25px;
+  }
+  tr.portero{
+    background: #B8F2EA;
+  }
+  tr.defensa{
+    background: #B8F2C0;
+  }
+  tr.medio{
+    background: #F2F0B8;
+  }
+  tr.delantero{
+    background: #F2B8B8;
+  }
+
+
+}

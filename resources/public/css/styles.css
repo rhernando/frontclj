@@ -8244,6 +8244,27 @@ ul.alert-dropdown {
   background: #CFE3CE;
 }
 
+/* line 6, ../../compass/_panel.scss */
+table.alineacion td img.minifoto {
+  width: 25px;
+}
+/* line 9, ../../compass/_panel.scss */
+table.alineacion tr.portero {
+  background: #B8F2EA;
+}
+/* line 12, ../../compass/_panel.scss */
+table.alineacion tr.defensa {
+  background: #B8F2C0;
+}
+/* line 15, ../../compass/_panel.scss */
+table.alineacion tr.medio {
+  background: #F2F0B8;
+}
+/* line 18, ../../compass/_panel.scss */
+table.alineacion tr.delantero {
+  background: #F2B8B8;
+}
+
 /*
 
 animaciones posibles
