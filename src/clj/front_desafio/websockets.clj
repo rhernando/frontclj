@@ -59,8 +59,8 @@
           (session/add-token uid (:token token))
           ;(assoc (:session req) :uid (:user_id token))
           (chsk-send! uid [ :auth/success ])
-          (chsk-send! uid [ :user/data (select-keys token [:username :avatar]) ])
-          (send-game-data (:token token uid))
+          ;(chsk-send! uid [ :user/data (select-keys token [:username :avatar]) ])
+          ;(send-game-data (:token token uid))
           )
         (chsk-send! uid [:auth/fail])))))
 

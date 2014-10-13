@@ -12,6 +12,7 @@
             [om-bootstrap.random :as r]
             [om-bootstrap.grid :as grid]
             [om-bootstrap.panel :as panel]
+            [goog.i18n.NumberFormat]
             [ajax.core :refer [GET POST]]
             [taoensso.sente :as s]
             [taoensso.encore :as encore :refer (logf)]
@@ -44,7 +45,7 @@
 
   (defmethod event-msg-handler :chsk/state
     [{:as ev-msg :keys [?data]}]
-    (if (:first-open? ?data)
+    (if (:open? ?data)
       (do
         (logf "Channel socket successfully established!")
         (chsk-send! [:session/status] )
@@ -92,8 +93,10 @@
   (reify
     om/IRender
     (render [this]
-            (dom/div nil (dom/p nil (dom/span nil (get-in app [:user :name] ))))
-            )))
+            (dom/div nil (panel/panel
+                          {:header "Mis equipos"}
+                          (dom/p nil (dom/span nil (get-in app [:user :name] ))))
+                     ))))
 ;(om/root paneluser-view  app-state {:target (.getElementById js/document "user-pn")})
 
 
@@ -103,20 +106,20 @@
     om/IRenderState
     (render-state [this {:keys [delete ]}]
                   (let [team-class (if (:activa team) "list-group-item active" "list-group-item")]
-                  (d/li {:class team-class }
-                        (dom/div nil
-                                 (dom/h4 nil (:nombre team))
-                                 (dom/p nil "Liga " (get-in team [:liga :nombre] ) ". Saldo " (:saldo team))
-                                 )
-                        ))
+                    (d/li {:class team-class }
+                          (dom/div nil
+                                   (dom/h4 nil (:nombre team))
+                                   (dom/p nil "Liga " (get-in team [:liga :nombre] ) ". Saldo: " (.format (goog.i18n.NumberFormat. 1) (:saldo team)))
+                                   )
+                          ))
                   ;(dom/tr nil
-                          ;(dom/td nil (:name team))
-                          ;(dom/td nil (:balance team))
-                          ;(dom/td nil (:score team))
-                          ;(dom/td nil
-                          ;        (dom/button #js {:onClick (fn [e] (put! delete team))} "delete")
-                          ;        (dom/button nil "select"))
-                          ;)
+                  ;(dom/td nil (:name team))
+                  ;(dom/td nil (:balance team))
+                  ;(dom/td nil (:score team))
+                  ;(dom/td nil
+                  ;        (dom/button #js {:onClick (fn [e] (put! delete team))} "delete")
+                  ;        (dom/button nil "select"))
+                  ;)
 
                   )
     )
@@ -147,10 +150,7 @@
                               {:header "Mis equipos"
                                :list-group (d/ul {:class "list-group"}
                                                  (om/build-all teamrow-view (:teams app)
-                                                   {:init-state {:delete delete}} )
-                                                 ;(d/li {:class "list-group-item"} "Item 1")
-                                                 ;(d/li {:class "list-group-item"} "Item 2")
-                                                 ;(d/li {:class "list-group-item"} "Item 3")
+                                                               {:init-state {:delete delete}} )
                                                  )}
                               nil)
                              ))
@@ -174,10 +174,11 @@
                               (om/build navigation-view app {}))
                      (dom/div #js {:id "wrapper"}
                               (dom/div #js {:id "page-wrapper"}
-                                       (dom/div #js {:className "container-fluid"}(dom/h1 "Testing")
-                                                (om/build paneluser-view app {})
-                                                (om/build panelteams-view app {})
-                                                )))))))
+                                       (grid/grid {:fluid? true}
+                                                  (grid/row {}
+                                                            (grid/col {:md 4 } (om/build paneluser-view app {}))
+                                                            (grid/col {:md 4 } (om/build panelteams-view app {}))
+                                                            ))))))))
 
 (defn login-handler [response]
   (.log js/console (str response))
@@ -187,6 +188,7 @@
     (swap! app-state assoc :session/state :secure)
     )
   (s/chsk-reconnect! chsk)
+
   )
 
 (defn login-error-handler [{:keys [message status status-text]}]
@@ -315,3 +317,4 @@
 ;(swap! app-state update-in [:teams] concat (list {:name "dedw3" :balance 223 :score 442}))
 ;(keys (first (:teams @app-state)))
 @app-state
+

@@ -23,6 +23,7 @@ $icon-font-path: '';
 // $gray-lighter:           lighten(#000, 93.5%) // #eee
 
 // $brand-primary:         #428bca
+$brand-primary:         #021401;
 // $brand-success:         #5cb85c
 // $brand-info:            #5bc0de
 // $brand-warning:         #f0ad4e
@@ -113,6 +114,7 @@ $body-bg:               #CFE3CE;
 
 //** Global color for active items (e.g., navs or dropdowns).
 // $component-active-color:    #fff
+$component-active-color:    #CFE3CE;
 //** Global background color for active items (e.g., navs or dropdowns).
 // $component-active-bg:       $brand-primary
 
@@ -639,7 +641,7 @@ $navbar-default-bg:                #CFE3CE;
 // $list-group-border-radius:      $border-radius-base
 
 //** Background color of single list items on hover
-// $list-group-hover-bg:           #f5f5f5
+$list-group-hover-bg:           #CFE3CE;
 //** Text color of active list items
 // $list-group-active-color:       $component-active-color
 //** Background color of active list items
@@ -664,19 +666,19 @@ $navbar-default-bg:                #CFE3CE;
 //
 //##
 
-// $panel-bg:                    #fff
+$panel-bg:                    #CFE3CE;
 // $panel-body-padding:          15px
 // $panel-heading-padding:       10px 15px
 // $panel-footer-padding:        $panel-heading-padding
 // $panel-border-radius:         $border-radius-base
 
 //** Border color for elements within panels
-// $panel-inner-border:          #ddd
-// $panel-footer-bg:             #f5f5f5
+$panel-inner-border:          #163514;
+$panel-footer-bg:             #021401;
 
-// $panel-default-text:          $gray-dark
+$panel-default-text:          #CFE3CE;//$gray-dark
 // $panel-default-border:        #ddd
-// $panel-default-heading-bg:    #f5f5f5
+$panel-default-heading-bg:    #163514;
 
 // $panel-primary-text:          #fff
 // $panel-primary-border:        $brand-primary
