@@ -18,6 +18,7 @@
                  [cljs-http "0.1.9"]
                  [cljs-ajax "0.3.2"]
                  [secretary "1.1.0"]
+                 [jayq "2.5.2"]
                  [om "0.7.3"]
                  [racehub/om-bootstrap "0.3.0"]]
 
@@ -46,6 +47,7 @@
                                    :output-dir "resources/public/js/out"
                                    :optimizations :none
                                    :source-map true
+                                   :libs ["resources/libs/jquery.flot.js"]
                                    :externs ["react/externs/react.js"]}}
                        {:id "release"
                         :source-paths ["src/cljs"]

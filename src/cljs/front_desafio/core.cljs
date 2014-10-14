@@ -1,4 +1,6 @@
 (ns front-desafio.core
+  (:use [jayq.core :only [$]]
+        )
   (:require-macros [cljs.core.async.macros :refer [go alt!]])
   (:require [goog.events :as events]
             [cljs.core.async :refer [put! <! >! chan timeout]]
@@ -13,11 +15,13 @@
             [om-bootstrap.grid :as grid]
             [om-bootstrap.panel :as panel]
             [om-bootstrap.table :refer [table]]
+            ;[clojure.core.clj->js :as clj->js]
             [goog.i18n.NumberFormat]
             [ajax.core :refer [GET POST]]
             [taoensso.sente :as s]
             [taoensso.encore :as encore :refer (logf)]
-            [front-desafio.utils :refer [guid]]))
+            [front-desafio.utils :refer [guid]])
+  )
 
 ;; Lets you do (prn "stuff") to the console
 (enable-console-print!)
@@ -242,8 +246,15 @@
       (render [this]
               (dom/div nil (panel/panel
                             {:header "Clasificación"}
-                            ;(dom/p nil (dom/img  #js {:src (get-in app [:user :avatar] )} nil))
-                            )))))
+                            (d/div {:id "clasificacion" :style {:height "200px"}} nil)
+                            )))
+      om/IDidMount
+      (did-mount [this]
+      (let [ $divchart ($ :#clasificacion)]
+        (.plot ($ :#clasificacion) (clojure.core/clj->js [ [[0, 0], [1, 1]] ]) , (clojure.core/clj->js { yaxis: { max: 1 } }))
+        )
+      ;$.plot($("#placeholder"), data, options);
+      )))
 
   (defn field-change
     "Generic input field updater. Keeps state in sync with input."
@@ -415,4 +426,7 @@
   ;(swap! app-state update-in [:teams] concat (list {:name "dedw3" :balance 223 :score 442}))
   ;(keys (first (:teams @app-state)))
   @app-state
+
+(.plot ($ :#clasificacion) (clojure.core/clj->js [ [[0, 0], [1, 1]] ]) , (clojure.core/clj->js { yaxis: { max: 1 } }))
+
 
