@@ -67,6 +67,7 @@
                    (swap! app-state assoc :user {:name username :avatar avatar :token token}))
       :game/teams (swap! app-state assoc :teams (last ?data))
       :team/lineup (swap! app-state assoc :lineup (last ?data))
+      :user/friends (swap! app-state assoc :friends (last ?data))
       (println "def event"))
     )
   ;; Add your (defmethod handle-event-msg! <event-id> [ev-msg] <body>)s here...

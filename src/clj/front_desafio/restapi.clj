@@ -90,7 +90,7 @@
                  :content-type :json
                  :accept :json
                  :headers {"Accept" "application/json"}}
-        {:keys [status error body]} @(http/get (str rest-server "/selecciones/usuarios" ) options)]
+        {:keys [status error body]} @(http/get (str rest-server "/usuarios" ) options)]
 
     (if error
       (println "Failed, exception is " error)

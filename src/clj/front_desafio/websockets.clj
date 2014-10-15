@@ -45,9 +45,9 @@
                idteam (:id (first (filter #(= true (:activa %)) data)))
                lineup (api/team-lineup token idteam)]
       (chsk-send! uid [ :team/lineup  lineup])
-
-      )
-    )
+      ) )
+  (let [friends (api/friends-data token)]
+    (chsk-send! uid [ :user/friends  friends]))
   )
 
 ;; Reply with authentication failure or success.
