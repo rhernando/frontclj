@@ -63,8 +63,8 @@
     (case  (first ?data)
       :session/state (swap! app-state assoc :session/state (last ?data))
       :user/data (let
-                   [{:keys [username avatar token]} (last ?data)]
-                   (swap! app-state assoc :user {:name username :avatar avatar :token token}))
+                   [{:keys [username avatar token p_rank]} (last ?data)]
+                   (swap! app-state assoc :user {:name username :avatar avatar :token token :p_rank p_rank}))
       :game/teams (swap! app-state assoc :teams (last ?data))
       :team/lineup (swap! app-state assoc :lineup (last ?data))
       :user/friends (swap! app-state assoc :friends (last ?data))
@@ -102,7 +102,12 @@
     (render [this]
             (dom/div nil (panel/panel
                           {:header (get-in app [:user :name] )}
-                          (dom/p nil (dom/img  #js {:src (get-in app [:user :avatar] )} nil)))
+                          (grid/row {}
+                                    (grid/col {:md 12}
+                                              (dom/p nil (dom/img  #js {:src (get-in app [:user :avatar] )} nil)))
+                                    (grid/row {}
+                                              (grid/col {:md 6} "Puntos Ranking " (get-in app [:user :p_rank] ) ))
+                                    ))
                      ))))
 ;(om/root paneluser-view  app-state {:target (.getElementById js/document "user-pn")})
 
@@ -179,7 +184,25 @@
     (render [this]
             (dom/div nil (panel/panel
                           {:header "Mis amigos"}
-                          ;(dom/p nil (dom/img  #js {:src (get-in app [:user :avatar] )} nil))
+                          (when-let [followers  (get-in app [:friends :seguidores])]
+                            (d/p "P Ranking: " )
+                            (do (dom/h4 nil "Seguidores")
+                            (d/ul {:class "list-group"}
+                                  (for [f followers]
+                                    (d/li {:class "list-group-item"}
+                                          (d/h4 #js {:className "list-group-item-heading" } (:username f))
+                                          (d/p "P Ranking: " (:p_rank f))
+                                    ))))
+                            )
+                          (when-let [friends  (get-in app [:friends :siguiendo])]
+                            (d/h4 "Siguiendo")
+                            (d/ul {:class "list-group"}
+                                  (for [f friends]
+                                    (d/li {:class "list-group-item"}
+                                          (d/h4 #js {:className "list-group-item-heading" } (:username f))
+                                          (d/p "P Ranking: " (:p_rank f))
+                                    )))
+                            )
                           )))))
 
 ;; alineacion
@@ -198,235 +221,235 @@
                                             (d/th "Jugador")
                                             (d/th "Puntos")))
                                           (d/tbody
-                                                (for [r (:porteros lineup)]
-                                                  (d/tr {:class "portero"}
+                                           (for [r (:porteros lineup)]
+                                             (d/tr {:class "portero"}
                                                    (d/td (d/img {:src (:foto r) :class "img-responsive minifoto"}))
                                                    (d/td (:apodo r))
                                                    (d/td (.format (goog.i18n.NumberFormat. 1) (:puntos r)))
                                                    )
-                                                  )
-                                                (for [r (:defensas lineup)]
-                                                  (d/tr {:class "defensa"}
+                                             )
+                                           (for [r (:defensas lineup)]
+                                             (d/tr {:class "defensa"}
                                                    (d/td (d/img {:src(:foto r) :class "img-responsive minifoto"}))
                                                    (d/td (:apodo r))
                                                    (d/td (.format (goog.i18n.NumberFormat. 1) (:puntos r)))
                                                    )
-                                                  )
-                                                (for [r (:medios lineup)]
-                                                  (d/tr {:class "medio"}
+                                             )
+                                           (for [r (:medios lineup)]
+                                             (d/tr {:class "medio"}
                                                    (d/td (d/img {:src(:foto r) :class "img-responsive minifoto"}))
                                                    (d/td (:apodo r))
                                                    (d/td (.format (goog.i18n.NumberFormat. 1) (:puntos r)))
                                                    )
-                                                  )
-                                                (for [r (:delanteros lineup)]
-                                                  (d/tr {:class "delantero"}
+                                             )
+                                           (for [r (:delanteros lineup)]
+                                             (d/tr {:class "delantero"}
                                                    (d/td (d/img {:src(:foto r) :class "img-responsive minifoto"}))
                                                    (d/td (:apodo r))
                                                    (d/td (.format (goog.i18n.NumberFormat. 1) (:puntos r)))
                                                    )
-                                                  )
+                                             )
                                            ))
                                    ))
-                                 )))))
+                          )))))
 
-  ;; Negociaciones fichajes abiertos
-  (defn panelmarket-view [app owner]
-    (reify
-      om/IRender
-      (render [this]
-              (dom/div nil (panel/panel
-                            {:header "Mercado"}
-                            ;(dom/p nil (dom/img  #js {:src (get-in app [:user :avatar] )} nil))
-                            )))))
+;; Negociaciones fichajes abiertos
+(defn panelmarket-view [app owner]
+  (reify
+    om/IRender
+    (render [this]
+            (dom/div nil (panel/panel
+                          {:header "Mercado"}
+                          ;(dom/p nil (dom/img  #js {:src (get-in app [:user :avatar] )} nil))
+                          )))))
 
-  ;; Clasificacion
-  (defn panelstandings-view [app owner]
-    (reify
-      om/IRender
-      (render [this]
-              (dom/div nil (panel/panel
-                            {:header "Clasificación"}
-                            (d/div {:id "clasificacion" :style {:height "200px"}} nil)
-                            )))
-      om/IDidMount
-      (did-mount [this]
-      (let [ $divchart ($ :#clasificacion)]
-        (.plot ($ :#clasificacion) (clojure.core/clj->js [ [[0, 0], [1, 1]] ]) , (clojure.core/clj->js { yaxis: { max: 1 } }))
-        )
-      ;$.plot($("#placeholder"), data, options);
-      )))
-
-  (defn field-change
-    "Generic input field updater. Keeps state in sync with input."
-    [e owner field]
-    (let [value (.. e -target -value)]
-      (om/set-state! owner field value)))
-
-  (defn secured-application
-    "Component that represents the secured portion of our application."
-    [app owner]
-    (reify
-      om/IRender
-      (render [this]
-              (dom/div nil
-                       (dom/div #js {:id "nagigator"}
-                                (om/build navigation-view app {}))
-                       (dom/div #js {:id "wrapper"}
-                                (dom/div #js {:id "page-wrapper"}
-                                         (grid/grid {:fluid? true}
-                                                    (grid/row {}
-                                                              (grid/col {:md 4 } (om/build paneluser-view app {}))
-                                                              (grid/col {:md 4 } (om/build panelteams-view app {}))
-                                                              (grid/col {:md 4 } (om/build panelround-view app {}))
-                                                              )
-                                                    (grid/row {}
-                                                              (grid/col {:md 4 } (om/build panellineup-view (:lineup app) {}))
-                                                              (grid/col {:md 4 } (om/build panelmarket-view app {}))
-                                                              (grid/col {:md 4 } (om/build panelstandings-view app {}))
-                                                              )
-                                                    (grid/row {}
-                                                              (grid/col {:md 4 } (om/build panelfriends-view app {}))
-                                                              )
-                                                    )))))))
-
-  (defn login-handler [response]
-    (.log js/console (str response))
-    ;{:token "iADwMDSexGtT1UqvgWE2", :user_id 1, :username "rubens", :avatar "/assets/default_red.png"}
-    (when-let [{:keys [username token user_id avatar]} response]
-      (swap! app-state assoc :user {:name username :avatar avatar :token token})
-      (swap! app-state assoc :session/state :secure)
-      )
-    (s/chsk-reconnect! chsk)
-
-    )
-
-  (defn login-error-handler [{:keys [message status status-text]}]
-    (.log js/console (str "something bad happened: " status " " status-text " " message))
-    (om/update! app [:notify/error] nil))
-
-  (defn attempt-login
-    "Handle the login event - send credentials to the server."
-    [e app owner]
-    (let [username (-> (om/get-node owner "username") .-value)
-          password (-> (om/get-node owner "password") .-value)]
-      (om/update! app [:notify/error] nil)
-      (POST "/login"
-            {:params {:username username
-                      :password   password}
-             :handler login-handler
-             :error-handler (fn [resp]
-                              (let [{:keys [response status status-text]} resp]
-                                (println resp)
-                                (.log js/console (str "Something bad happened: " status " " status-text " " message))
-                                (om/update! app [:notify/error] (:message response) )))
-             :response-format :json
-             :format :raw
-             :keywords? true})
-      )
-    ;; suppress the form submit:
-    false)
-
-  (defn close-alert
-    [e app owner]
-    (om/update! app [:notify/error] nil)
-    false)
-
-  (defn login-form
-    "Component that provides a login form and submits credentials to the server."
-    [app owner]
-    (reify
-      om/IInitState
-      (init-state [this]
-                  {:username "" :password ""})
-      om/IRenderState
-      (render-state [this state]
-                    (dom/div #js {:className "container loginpage"}
-                             (when-let [error (:notify/error app)]
-                               (r/alert {:bs-style "danger" }; TODO cuando se pueda.... :dismiss-after 10 :on-dismiss #(close-alert % app owner)}
-                                        (d/strong "Error!")
-                                        error))
-                             (grid/grid {}
-                                        (grid/row {}
-                                                  (grid/col {:md 4 :md-offset 4}
-                                                            (dom/div #js {:className "animated bounceIn loginbox"}
-                                                                     (dom/div #js {:className "page-icon"} (dom/h1 nil "D F"))
-                                                                     (dom/hr nil nil)
-                                                                     (dom/h2 nil "Acceder")
-                                                                     (d/form {:class "form-horizontal" :on-submit #(attempt-login % app owner)}
-                                                                             (i/input {:type "text" :label "Usuario"
-                                                                                       :ref "username"
-                                                                                       :id "username"
-                                                                                       :value (:username state)
-                                                                                       :on-change #(field-change % owner :username)
-                                                                                       :label-classname "col-xs-5"
-                                                                                       :wrapper-classname "col-xs-6"})
-                                                                             (i/input {:type "password" :label "Password"
-                                                                                       :ref "password"
-                                                                                       :id "password"
-                                                                                       :value (:password state)
-                                                                                       :on-change #(field-change % owner :password)
-                                                                                       :label-classname "col-xs-5"
-                                                                                       :wrapper-classname "col-xs-6"})
-                                                                             (b/button {:type "submit" :bs-style "default" :class "btn-block"} "Login") )
-                                                                     )
-                                                            ))) ))   ))
-
-
-
-  (defn application
-    "Component that represents our application. Maintains session state.
-    Selects views based on session state."
-    [app owner]
-    (reify
-      ;om/IInitState
-      ;(init-state [this]
-      ;{:session/state :open}
-      ;            )
-      om/IWillMount
-      (will-mount [this]
-                  (s/start-chsk-router! ch-chsk event-msg-handler*)
-                  )
-      om/IDidMount
-      (did-mount [this]
-                 (println "VOY")
-                 (chsk-send! [:session/status] )
+;; Clasificacion
+(defn panelstandings-view [app owner]
+  (reify
+    om/IRender
+    (render [this]
+            (dom/div nil (panel/panel
+                          {:header "Clasificación"}
+                          (d/div {:id "clasificacion" :style {:height "200px"}} nil)
+                          )))
+    om/IDidMount
+    (did-mount [this]
+               (let [ $divchart ($ :#clasificacion)]
+                 (.plot ($ :#clasificacion) (clojure.core/clj->js [ [[0, 0], [1, 1]] ]) , (clojure.core/clj->js { yaxis: { max: 1 } }))
                  )
-      om/IRenderState
-      (render-state [this state]
-                    (dom/div #js {:style #js {:width "100%"}}
-                             (let [state (:session/state app)]
-                               (case state
-                                 :secure
-                                 (om/build secured-application app {})
-                                 :open
-                                 (om/build login-form app {})
-                                 :unknown
-                                 (dom/div nil "Loading...")))))))
+               ;$.plot($("#placeholder"), data, options);
+               )))
+
+(defn field-change
+  "Generic input field updater. Keeps state in sync with input."
+  [e owner field]
+  (let [value (.. e -target -value)]
+    (om/set-state! owner field value)))
+
+(defn secured-application
+  "Component that represents the secured portion of our application."
+  [app owner]
+  (reify
+    om/IRender
+    (render [this]
+            (dom/div nil
+                     (dom/div #js {:id "nagigator"}
+                              (om/build navigation-view app {}))
+                     (dom/div #js {:id "wrapper"}
+                              (dom/div #js {:id "page-wrapper"}
+                                       (grid/grid {:fluid? true}
+                                                  (grid/row {}
+                                                            (grid/col {:md 4 } (om/build paneluser-view app {}))
+                                                            (grid/col {:md 4 } (om/build panelteams-view app {}))
+                                                            (grid/col {:md 4 } (om/build panelround-view app {}))
+                                                            )
+                                                  (grid/row {}
+                                                            (grid/col {:md 4 } (om/build panellineup-view (:lineup app) {}))
+                                                            (grid/col {:md 4 } (om/build panelmarket-view app {}))
+                                                            (grid/col {:md 4 } (om/build panelstandings-view app {}))
+                                                            )
+                                                  (grid/row {}
+                                                            (grid/col {:md 4 } (om/build panelfriends-view app {}))
+                                                            )
+                                                  )))))))
+
+(defn login-handler [response]
+  (.log js/console (str response))
+  ;{:token "iADwMDSexGtT1UqvgWE2", :user_id 1, :username "rubens", :avatar "/assets/default_red.png"}
+  (when-let [{:keys [username token user_id avatar]} response]
+    (swap! app-state assoc :user {:name username :avatar avatar :token token})
+    (swap! app-state assoc :session/state :secure)
+    )
+  (s/chsk-reconnect! chsk)
+
+  )
+
+(defn login-error-handler [{:keys [message status status-text]}]
+  (.log js/console (str "something bad happened: " status " " status-text " " message))
+  (om/update! app [:notify/error] nil))
+
+(defn attempt-login
+  "Handle the login event - send credentials to the server."
+  [e app owner]
+  (let [username (-> (om/get-node owner "username") .-value)
+        password (-> (om/get-node owner "password") .-value)]
+    (om/update! app [:notify/error] nil)
+    (POST "/login"
+          {:params {:username username
+                    :password   password}
+           :handler login-handler
+           :error-handler (fn [resp]
+                            (let [{:keys [response status status-text]} resp]
+                              (println resp)
+                              (.log js/console (str "Something bad happened: " status " " status-text " " message))
+                              (om/update! app [:notify/error] (:message response) )))
+           :response-format :json
+           :format :raw
+           :keywords? true})
+    )
+  ;; suppress the form submit:
+  false)
+
+(defn close-alert
+  [e app owner]
+  (om/update! app [:notify/error] nil)
+  false)
+
+(defn login-form
+  "Component that provides a login form and submits credentials to the server."
+  [app owner]
+  (reify
+    om/IInitState
+    (init-state [this]
+                {:username "" :password ""})
+    om/IRenderState
+    (render-state [this state]
+                  (dom/div #js {:className "container loginpage"}
+                           (when-let [error (:notify/error app)]
+                             (r/alert {:bs-style "danger" }; TODO cuando se pueda.... :dismiss-after 10 :on-dismiss #(close-alert % app owner)}
+                                      (d/strong "Error!")
+                                      error))
+                           (grid/grid {}
+                                      (grid/row {}
+                                                (grid/col {:md 4 :md-offset 4}
+                                                          (dom/div #js {:className "animated bounceIn loginbox"}
+                                                                   (dom/div #js {:className "page-icon"} (dom/h1 nil "D F"))
+                                                                   (dom/hr nil nil)
+                                                                   (dom/h2 nil "Acceder")
+                                                                   (d/form {:class "form-horizontal" :on-submit #(attempt-login % app owner)}
+                                                                           (i/input {:type "text" :label "Usuario"
+                                                                                     :ref "username"
+                                                                                     :id "username"
+                                                                                     :value (:username state)
+                                                                                     :on-change #(field-change % owner :username)
+                                                                                     :label-classname "col-xs-5"
+                                                                                     :wrapper-classname "col-xs-6"})
+                                                                           (i/input {:type "password" :label "Password"
+                                                                                     :ref "password"
+                                                                                     :id "password"
+                                                                                     :value (:password state)
+                                                                                     :on-change #(field-change % owner :password)
+                                                                                     :label-classname "col-xs-5"
+                                                                                     :wrapper-classname "col-xs-6"})
+                                                                           (b/button {:type "submit" :bs-style "default" :class "btn-block"} "Login") )
+                                                                   )
+                                                          ))) ))   ))
 
 
-  ; estructura de la aplicacion
-  (def app-state (atom
-                  {
-                   :user {:name nil :avatar nil}
-                   :teams '()
-                   :league nil
-                   :session/state :unknown
-                   }))
 
-  (om/root application
-           app-state
-           {:target (. js/document (getElementById "app"))})
+(defn application
+  "Component that represents our application. Maintains session state.
+  Selects views based on session state."
+  [app owner]
+  (reify
+    ;om/IInitState
+    ;(init-state [this]
+    ;{:session/state :open}
+    ;            )
+    om/IWillMount
+    (will-mount [this]
+                (s/start-chsk-router! ch-chsk event-msg-handler*)
+                )
+    om/IDidMount
+    (did-mount [this]
+               (println "VOY")
+               (chsk-send! [:session/status] )
+               )
+    om/IRenderState
+    (render-state [this state]
+                  (dom/div #js {:style #js {:width "100%"}}
+                           (let [state (:session/state app)]
+                             (case state
+                               :secure
+                               (om/build secured-application app {})
+                               :open
+                               (om/build login-form app {})
+                               :unknown
+                               (dom/div nil "Loading...")))))))
 
 
-  ;; PRUEBAS estaticas
-  ;(swap! app-state assoc :text "hola")
-  ;(swap! app-state assoc :user {:name "pp"})
+; estructura de la aplicacion
+(def app-state (atom
+                {
+                 :user {:name nil :avatar nil}
+                 :teams '()
+                 :league nil
+                 :session/state :unknown
+                 }))
 
-  ;(swap! app-state update-in [:teams] concat (list {:name "as" :balance 22 :score 2}))
-  ;(swap! app-state update-in [:teams] concat (list {:name "dedw3" :balance 223 :score 442}))
-  ;(keys (first (:teams @app-state)))
-  @app-state
+(om/root application
+         app-state
+         {:target (. js/document (getElementById "app"))})
+
+
+;; PRUEBAS estaticas
+;(swap! app-state assoc :text "hola")
+;(swap! app-state assoc :user {:name "pp"})
+
+;(swap! app-state update-in [:teams] concat (list {:name "as" :balance 22 :score 2}))
+;(swap! app-state update-in [:teams] concat (list {:name "dedw3" :balance 223 :score 442}))
+;(keys (first (:teams @app-state)))
+@app-state
 
 (.plot ($ :#clasificacion) (clojure.core/clj->js [ [[0, 0], [1, 1]] ]) , (clojure.core/clj->js { yaxis: { max: 1 } }))
 

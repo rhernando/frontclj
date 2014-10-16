@@ -85,7 +85,7 @@
   ; enviar tambien datos basicos de sesion al usuario
   (when-let [token (session/get-token (session-uid req))]
     (let [data (api/user-data token)]
-      (chsk-send! (session-uid req) [ :user/data (select-keys data [:username :avatar]) ])
+      (chsk-send! (session-uid req) [ :user/data (select-keys data [:username :avatar :p_rank]) ])
       )
     (send-game-data token (session-uid req)))
 
