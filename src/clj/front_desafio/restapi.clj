@@ -99,3 +99,37 @@
      (json/read-str body :key-fn keyword)
      (catch Exception e {:message "Error en el servidor"} ))
     ))
+
+
+(defn standings-data
+  [token]
+  (let [options {:form-params {:auth_token token}
+                 :content-type :json
+                 :accept :json
+                 :headers {"Accept" "application/json"}}
+        {:keys [status error body]} @(http/get (str rest-server "/clasificacion" ) options)]
+
+    (if error
+      (println "Failed, exception is " error)
+      (println "Async HTTP POST: " status))
+    (try
+     (json/read-str body :key-fn keyword)
+     (catch Exception e {:message "Error en el servidor"} ))
+    ))
+
+(defn round-data
+  [token]
+  (let [options {:form-params {:auth_token token}
+                 :content-type :json
+                 :accept :json
+                 :headers {"Accept" "application/json"}}
+        {:keys [status error body]} @(http/get (str rest-server "/partidos" ) options)]
+
+    (if error
+      (println "Failed, exception is " error)
+      (println "Async HTTP POST: " status))
+    (try
+     (json/read-str body :key-fn keyword)
+     (catch Exception e {:message "Error en el servidor"} ))
+    ))
+

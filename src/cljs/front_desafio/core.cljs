@@ -66,7 +66,9 @@
                    [{:keys [username avatar token p_rank]} (last ?data)]
                    (swap! app-state assoc :user {:name username :avatar avatar :token token :p_rank p_rank}))
       :game/teams (swap! app-state assoc :teams (last ?data))
+      :game/round (swap! app-state assoc :round (last ?data))
       :team/lineup (swap! app-state assoc :lineup (last ?data))
+      :team/standings (swap! app-state assoc :standings (last ?data))
       :user/friends (swap! app-state assoc :friends (last ?data))
       (println "def event"))
     )
@@ -109,10 +111,7 @@
                                               (grid/col {:md 6} "Puntos Ranking " (get-in app [:user :p_rank] ) ))
                                     ))
                      ))))
-;(om/root paneluser-view  app-state {:target (.getElementById js/document "user-pn")})
 
-
-; om.core/build-all para cada fila de teams
 (defn teamrow-view [team owner]
   (reify
     om/IRenderState
@@ -168,13 +167,28 @@
   )
 
 ;; jornada actual
-(defn panelround-view [app owner]
+(defn panelround-view [round owner]
   (reify
     om/IRender
     (render [this]
             (dom/div nil (panel/panel
                           {:header "Jornada Actual"}
-                          ;(dom/p nil (dom/img  #js {:src (get-in app [:user :avatar] )} nil))
+                          (dom/p nil
+                                 (if   round
+                                   (table {:striped? true :bordered? false :condensed? true :hover? true :class "round"}
+                                          (d/tbody
+                                           (for [r round]
+                                             (d/tr {:class "partido"}
+                                                   (d/td (:fecha r))
+                                                   (d/td (:nom_local r))
+                                                   (d/td (d/img {:src(:logo_local r) :class "img-responsive minifoto"}))
+                                                   (d/td (:goles_local r) " - "  (:goles_visitante r))
+                                                   (d/td (d/img {:src(:logo_visit r) :class "img-responsive minifoto"}))
+                                                   (d/td (:nom_visit r))
+                                                   )
+                                             )
+                                           ))
+                                   ))
                           )))))
 
 ;; Amigos
@@ -184,24 +198,23 @@
     (render [this]
             (dom/div nil (panel/panel
                           {:header "Mis amigos"}
-                          (when-let [followers  (get-in app [:friends :seguidores])]
-                            (d/p "P Ranking: " )
-                            (do (dom/h4 nil "Seguidores")
+                          (dom/h4 nil "Seguidores")
+                          (let [followers  (get-in app [:friends :seguidores])]
                             (d/ul {:class "list-group"}
                                   (for [f followers]
                                     (d/li {:class "list-group-item"}
                                           (d/h4 #js {:className "list-group-item-heading" } (:username f))
                                           (d/p "P Ranking: " (:p_rank f))
-                                    ))))
+                                          )))
                             )
+                          (d/h4 "Siguiendo")
                           (when-let [friends  (get-in app [:friends :siguiendo])]
-                            (d/h4 "Siguiendo")
                             (d/ul {:class "list-group"}
                                   (for [f friends]
                                     (d/li {:class "list-group-item"}
                                           (d/h4 #js {:className "list-group-item-heading" } (:username f))
                                           (d/p "P Ranking: " (:p_rank f))
-                                    )))
+                                          )))
                             )
                           )))))
 
@@ -272,10 +285,10 @@
                           {:header "Clasificación"}
                           (d/div {:id "clasificacion" :style {:height "200px"}} nil)
                           )))
-    om/IDidMount
-    (did-mount [this]
+    om/IDidUpdate
+    (did-update [this _ _]
                (let [ $divchart ($ :#clasificacion)]
-                 (.plot ($ :#clasificacion) (clojure.core/clj->js [ [[0, 0], [1, 1]] ]) , (clojure.core/clj->js { yaxis: { max: 1 } }))
+                 (.plot ($ :#clasificacion) (clojure.core/clj->js (vec(map-indexed (fn [idx itm] [idx (last (last itm))]) (map #(:jornadas %) (:standings @app-state))))))
                  )
                ;$.plot($("#placeholder"), data, options);
                )))
@@ -301,7 +314,7 @@
                                                   (grid/row {}
                                                             (grid/col {:md 4 } (om/build paneluser-view app {}))
                                                             (grid/col {:md 4 } (om/build panelteams-view app {}))
-                                                            (grid/col {:md 4 } (om/build panelround-view app {}))
+                                                            (grid/col {:md 4 } (om/build panelround-view (:round app) {}))
                                                             )
                                                   (grid/row {}
                                                             (grid/col {:md 4 } (om/build panellineup-view (:lineup app) {}))
@@ -451,6 +464,15 @@
 ;(keys (first (:teams @app-state)))
 @app-state
 
-(.plot ($ :#clasificacion) (clojure.core/clj->js [ [[0, 0], [1, 1]] ]) , (clojure.core/clj->js { yaxis: { max: 1 } }))
+;(.plot ($ :#clasificacion) (clojure.core/clj->js [ [[1, 0], [1, 1]] ]) , (clojure.core/clj->js { yaxis: { max: 1 } }))
+
+;(.plot ($ :#clasificacion) (clojure.core/clj->js (vec(map-indexed (fn [idx itm] [idx (last (last itm))]) (map #(:jornadas %) (:standings @app-state))))) )
 
 
+;(map #( map last (:jornadas %)) (:standings @app-state))
+
+
+
+
+
+;(vec(map-indexed (fn [idx itm] [idx (last (last itm))]) (map #(:jornadas %) (:standings @app-state))))

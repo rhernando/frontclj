@@ -48,6 +48,10 @@
       ) )
   (let [friends (api/friends-data token)]
     (chsk-send! uid [ :user/friends  friends]))
+  (let [standings (api/standings-data token)]
+    (chsk-send! uid [ :team/standings  standings]))
+  (let [round (api/round-data token)]
+    (chsk-send! uid [ :game/round  round]))
   )
 
 ;; Reply with authentication failure or success.

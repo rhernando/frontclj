@@ -367,8 +367,8 @@ th {
 }
 @font-face {
   font-family: 'Glyphicons Halflings';
-  src: url(/fonts/glyphicons-halflings-regular.eot?1412799605);
-  src: url(/fonts/glyphicons-halflings-regular.eot?&1412799605#iefix) format("embedded-opentype"), url(/fonts/glyphicons-halflings-regular.woff?1412799605) format("woff"), url(/fonts/glyphicons-halflings-regular.ttf?1412799605) format("truetype"), url(/fonts/glyphicons-halflings-regular.svg?1412799605#glyphicons_halflingsregular) format("svg");
+  src: url(/fonts/glyphicons-halflings-regular.eot?1412837240);
+  src: url(/fonts/glyphicons-halflings-regular.eot?&1412837240#iefix) format("embedded-opentype"), url(/fonts/glyphicons-halflings-regular.woff?1412837240) format("woff"), url(/fonts/glyphicons-halflings-regular.ttf?1412837240) format("truetype"), url(/fonts/glyphicons-halflings-regular.svg?1412837240#glyphicons_halflingsregular) format("svg");
 }
 /* line 25, ../../../../../../.rvm/gems/ruby-2.1.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap/_glyphicons.scss */
 .glyphicon {
@@ -8263,6 +8263,11 @@ table.alineacion tr.medio {
 /* line 18, ../../compass/_panel.scss */
 table.alineacion tr.delantero {
   background: #F2B8B8;
+}
+
+/* line 26, ../../compass/_panel.scss */
+table.round td img.minifoto {
+  width: 20px;
 }
 
 /*
