@@ -43,8 +43,10 @@
     (chsk-send! uid [ :game/teams  data])
     (let [
                idteam (:id (first (filter #(= true (:activa %)) data)))
-               lineup (api/team-lineup token idteam)]
+               lineup (api/team-lineup token idteam)
+               market (api/team-market token idteam)]
       (chsk-send! uid [ :team/lineup  lineup])
+      (chsk-send! uid [ :team/market  market])
       ) )
   (let [friends (api/friends-data token)]
     (chsk-send! uid [ :user/friends  friends]))

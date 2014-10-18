@@ -68,6 +68,7 @@
       :game/teams (swap! app-state assoc :teams (last ?data))
       :game/round (swap! app-state assoc :round (last ?data))
       :team/lineup (swap! app-state assoc :lineup (last ?data))
+      :team/market (swap! app-state assoc :market (last ?data))
       :team/standings (swap! app-state assoc :standings (last ?data))
       :user/friends (swap! app-state assoc :friends (last ?data))
       (println "def event"))
@@ -204,6 +205,7 @@
                                   (for [f followers]
                                     (d/li {:class "list-group-item"}
                                           (d/h4 #js {:className "list-group-item-heading" } (:username f))
+                                          (d/img {:src (:avatar f) :class "img-responsive minifoto"})
                                           (d/p "P Ranking: " (:p_rank f))
                                           )))
                             )
@@ -213,6 +215,7 @@
                                   (for [f friends]
                                     (d/li {:class "list-group-item"}
                                           (d/h4 #js {:className "list-group-item-heading" } (:username f))
+                                          (d/img {:src (:avatar f) :class "img-responsive minifoto"})
                                           (d/p "P Ranking: " (:p_rank f))
                                           )))
                             )
@@ -267,14 +270,27 @@
                           )))))
 
 ;; Negociaciones fichajes abiertos
-(defn panelmarket-view [app owner]
+(defn panelmarket-view [market owner]
   (reify
     om/IRender
     (render [this]
             (dom/div nil (panel/panel
                           {:header "Mercado"}
-                          ;(dom/p nil (dom/img  #js {:src (get-in app [:user :avatar] )} nil))
-                          )))))
+                          (dom/p nil
+                                 (if   market
+                                   (table {:striped? true :bordered? false :condensed? true :hover? true :class "market"}
+                                          (d/tbody
+                                           (for [r (take 10 market)]
+                                             (d/tr {:class "partido"}
+                                                   (d/td (d/img {:src(:logo_equipo r) :class "img-responsive minifoto"}))
+                                                   (d/td (d/img {:src(:url_imagen r) :class "img-responsive minifoto"}))
+                                                   (d/td (:apodo r))
+                                                   (d/td (:puntos r))
+                                                   (d/td (:valor r))
+                                                   )
+                                             )
+                                           ))
+                                   ))                          )))))
 
 ;; Clasificacion
 (defn panelstandings-view [app owner]
@@ -287,11 +303,11 @@
                           )))
     om/IDidUpdate
     (did-update [this _ _]
-               (let [ $divchart ($ :#clasificacion)]
-                 (.plot ($ :#clasificacion) (clojure.core/clj->js (vec(map-indexed (fn [idx itm] [idx (last (last itm))]) (map #(:jornadas %) (:standings @app-state))))))
-                 )
-               ;$.plot($("#placeholder"), data, options);
-               )))
+                (let [ $divchart ($ :#clasificacion)]
+                  (.plot ($ :#clasificacion) (clojure.core/clj->js (vec(map-indexed (fn [idx itm] [idx (last (last itm))]) (map #(:jornadas %) (:standings @app-state))))))
+                  )
+                ;$.plot($("#placeholder"), data, options);
+                )))
 
 (defn field-change
   "Generic input field updater. Keeps state in sync with input."
@@ -318,7 +334,7 @@
                                                             )
                                                   (grid/row {}
                                                             (grid/col {:md 4 } (om/build panellineup-view (:lineup app) {}))
-                                                            (grid/col {:md 4 } (om/build panelmarket-view app {}))
+                                                            (grid/col {:md 4 } (om/build panelmarket-view (:market app) {}))
                                                             (grid/col {:md 4 } (om/build panelstandings-view app {}))
                                                             )
                                                   (grid/row {}
