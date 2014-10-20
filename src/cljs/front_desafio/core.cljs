@@ -3,6 +3,7 @@
         )
   (:require-macros [cljs.core.async.macros :refer [go alt!]])
   (:require [goog.events :as events]
+            [secretary.core :as secretary :include-macros true :refer [defroute]]
             [cljs.core.async :refer [put! <! >! chan timeout]]
             [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
@@ -21,10 +22,17 @@
             [taoensso.sente :as s]
             [taoensso.encore :as encore :refer (logf)]
             [front-desafio.utils :refer [guid]])
+  (:import goog.History
+           goog.History.EventType)
   )
 
 ;; Lets you do (prn "stuff") to the console
 (enable-console-print!)
+
+
+
+(def history (History.))
+
 
 ;; create the Sente web socket connection stuff when we are loaded:
 
@@ -303,10 +311,17 @@
                           )))
     om/IDidUpdate
     (did-update [this _ _]
-                (let [ $divchart ($ :#clasificacion)]
-                  (.plot ($ :#clasificacion) (clojure.core/clj->js (vec(map-indexed (fn [idx itm] [idx (last (last itm))]) (map #(:jornadas %) (:standings @app-state))))))
+                (let [
+                      $divchart ($ :#clasificacion)
+                      options  {:legend {:show true :position "sw"} :series {:points {:show true} :lines {:show true}} :xaxis {:tickSize 1 :tickDecimals 0} }
+                      ]
+                  (println "llLLL")
+                  (println (vec(map #( map-indexed (fn [idx itm] [idx  (last itm)]) (:jornadas %)) (:standings app))))
+                  (.plot $divchart
+                         (clojure.core/clj->js (vec (map (fn [tmd] {:label (:nombre tmd) :data ( map-indexed (fn [idx itm] [(+ 1 idx)  (last itm)]) (:jornadas tmd))  }) app) ))
+                         (clojure.core/clj->js options)
+                         )
                   )
-                ;$.plot($("#placeholder"), data, options);
                 )))
 
 (defn field-change
@@ -335,7 +350,7 @@
                                                   (grid/row {}
                                                             (grid/col {:md 4 } (om/build panellineup-view (:lineup app) {}))
                                                             (grid/col {:md 4 } (om/build panelmarket-view (:market app) {}))
-                                                            (grid/col {:md 4 } (om/build panelstandings-view app {}))
+                                                            (grid/col {:md 4 } (om/build panelstandings-view (:standings app) {}))
                                                             )
                                                   (grid/row {}
                                                             (grid/col {:md 4 } (om/build panelfriends-view app {}))
@@ -457,6 +472,33 @@
                                (dom/div nil "Loading...")))))))
 
 
+; Navigation and Routing with Om and Secretary
+(def navigation-state
+  (atom [{:name "Add" :path "/add"}
+         {:name "Browse" :path "/browse"}]))
+
+
+(defroute "/add" [] (js/console.log "Adding"))
+
+(defroute "/browse" [] (js/console.log "Browsing"))
+
+(defn refresh-navigation []
+  (let [token (.getToken history)
+        set-active (fn [nav]
+                     (assoc nav :active (= (:path nav) token)))]
+    (swap! navigation-state #(map set-active %))))
+
+(defn on-navigate [event]
+  (refresh-navigation)
+  (secretary/dispatch! (.-token event)))
+
+(doto history
+  (goog.events/listen EventType/NAVIGATE on-navigate)
+  (.setEnabled true))
+
+
+
+
 ; estructura de la aplicacion
 (def app-state (atom
                 {
@@ -488,7 +530,18 @@
 ;(map #( map last (:jornadas %)) (:standings @app-state))
 
 
+;(map (fn [tmd] {:label (:nombre tmd) :data ( map-indexed (fn [idx itm] [idx  (last itm)]) (:jornadas tmd))  })     (:standings @app-state))
+
+;(:standings @app-state)
 
 
 
 ;(vec(map-indexed (fn [idx itm] [idx (last (last itm))]) (map #(:jornadas %) (:standings @app-state))))
+
+
+(.plot ($ :#clasificacion) (clojure.core/clj->js (vec(map (fn [tmd] {:label (:nombre tmd) :data ( map-indexed (fn [idx itm] [idx  (last itm)]) (:jornadas tmd))  })     (:standings @app-state)))))
+
+
+
+
+;(clojure.core/clj->js {:legend {:show true :position "ne"}})
